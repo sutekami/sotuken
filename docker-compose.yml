@@ -1,0 +1,16 @@
+services:
+  express:
+    build: ./express
+    volumes:
+      - ./express:/usr/src/app
+    ports:
+      - "3000:3000"
+    command: node app.js
+  svelte:
+    build: ./svelte
+    volumes:
+      - ./svelte:/usr/src/app
+    ports:
+      - "8080:5173"
+    tty: true
+    command: npm run dev
