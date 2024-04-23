@@ -14,3 +14,11 @@ services:
       - "8080:5173"
     tty: true
     command: npm run dev
+  mysql:
+    build: ./mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: root
