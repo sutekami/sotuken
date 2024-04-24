@@ -5,7 +5,10 @@ services:
       - ./express:/usr/src/app
     ports:
       - "3000:3000"
-    command: node app.js
+    tty: true
+    depends_on:
+      - mysql
+    command: npm run dev
   svelte:
     build: ./svelte
     volumes:
@@ -13,12 +16,16 @@ services:
     ports:
       - "8080:5173"
     tty: true
+    depends_on:
+      - mysql
     command: npm run dev
   mysql:
     build: ./mysql
     ports:
       - "3306:3306"
     volumes:
-      - ./my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./mysql/.data:/var/lib/mysql
+    tty: true
     environment:
       MYSQL_ROOT_PASSWORD: root
