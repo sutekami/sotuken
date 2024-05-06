@@ -9,9 +9,21 @@ const axiosInstance = axios.create({
   responseType: 'json'
 });
 
-const test = async () => {
-  const res = await axiosInstance.get('/signup');
-  console.log(res);
-}
+const api = {
+  signup: {
+    index: () => {
+      const config = { url: '/signup', method: 'get' }
+      return axiosInstance.request(config);
+    },
+    create: ({params}) => {
+      const config = {
+        url: '/signup',
+        method: 'post',
+        data: params,
+      };
+      return axiosInstance.request(config);
+    },
+  },
+};
 
-export { test };
+export default api;
