@@ -1,29 +1,32 @@
-<script context="module">
+<script>
   import api from "$lib/api";
+  import toastr from "$lib/utils/toastr";
   import Input from "$lib/components/Input.svelte";
   import Form from "$lib/components/Form.svelte";
+  import Button from "$lib/components/Button.svelte";
+
+  let name, email, password;
 
   const handleSave = async () => {
-    const params = 'teset';
-    const res = await api.signup.create({ params });
-    console.log(res.data);
+    const params = { name, email, password };
+    await api.signup.create({ params })
+      .then(() => {
+        location.href = "/mypage"
+      })
+      .catch((data) => {
+        toastr.handleError(data.response.data.err, 5);
+      });
   }
-
-  const fetchUsers = async () => {
-    const res = await api.signup.index();
-    console.log(res.data);
-  }
-</script>
-
-<script>
-  let name, email, password;
 </script>
 
 <div class="form">
-  <Form title="サインアップ" --width-px="700px">
+  <Form title="サインアップ" on:save={handleSave} --width-px="700px">
     <Input title="ユーザー名" bind:value={name} />
     <Input title="メールアドレス" type="email" bind:value={email} />
     <Input title="パスワード" type="password" bind:value={password} />
+    <div class="btn">
+      <Button on:save={handleSave} label="登録する" />
+    </div>
   </Form>
 </div>
 
@@ -34,5 +37,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .btn {
+    display: flex;
+    justify-content: center;
   }
 </style>

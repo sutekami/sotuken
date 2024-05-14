@@ -6,10 +6,6 @@ const disconnect = async (data) => {
   await prisma.$disconnect();
   return data;
 }
-const disconnect_with_error = async (e) => {
-  await disconnect();
-  throw new Error(e, { cause: e })
-}
 
 const main = async () => {
   const allUsers = await prisma.user.findMany();
@@ -17,6 +13,6 @@ const main = async () => {
 }
 
 module.exports = {
-  main: () => main().then((data) => disconnect(data)).catch((e) => disconnect_with_error(e)),
-  create: (data) => create(data).then((data) => disconnect(data)).catch((e) => disconnect_with_error(e)),
+  main: () => main().then((data) => disconnect(data)),
+  create: (data) => create(data).then((data) => disconnect(data)),
 }

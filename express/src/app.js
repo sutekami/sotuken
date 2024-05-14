@@ -35,15 +35,22 @@ app.use('/signin', require('./signin'))
 
 io.on('connection', (socket) => {
   console.log('a user connected');
+  socket.on('test', (msg) => {
+    console.log(msg);
+    io.emit('test', msg);
+  })
 })
 
 app.use((err, req, res, next) => {
-  console.error(err)
+  console.error(err);
 
-  switch(err.cause.name) {
+  switch(err.name) {
     case "PrismaClientValidationError":
       res.status(400).send(err.message);
       break
+    case "ValidationError":
+      res.status(400).send({ err: err.message });
+      break;
     default:
       res.status(500).send('server error.')
       break
