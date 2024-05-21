@@ -9,7 +9,7 @@ const port = 3000;
 const io = new Server(server, {
   cors: {
     origin: 'http://localhost:5000',
-  }
+  },
 });
 
 // CORS設定・CSRF対策、POST等のdata受け取り可能にする設定
