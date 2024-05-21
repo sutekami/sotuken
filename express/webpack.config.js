@@ -1,31 +1,36 @@
-/** @type {import('webpack').Configuration} */
-
 const path = require('path');
-const nodeExternals = require('webpack-node-enternals');
+const rules = require('./webpack_config/rules');
+const nodeExternals = require('webpack-node-externals');
 
-const config = {
-  mode: "development",
-  entry: './source/app.ts',
-  output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, './dist'),
+module.exports = {
+  entry: {
+    index: "./src/index.ts",
   },
-  target: "node",
+  mode: "development",
+  output: {
+    path: path.resolve(__dirname, '.dist'),
+    // filename: '[name].[contenthash].bundle.js',
+    filename: '[name].bundle.js',
+    clean: true,
+  },
+  module: {
+    rules: rules,
+  },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
+    modules: [
+      path.resolve(__dirname, 'src'),
+      'node_modules',
+    ],
+  },
   node: {
     __dirname: false,
     __filename: false,
   },
-  extenals: [nodeExternals()],
-  module: {
-    rules: [
-      {
-        loader: "babel-loader",
-      },
-    ],
-  },
-  resolve: {
-    extentions: [".ts", ".js"]
+  externals: [nodeExternals()],
+  target: ['node'],
+  devtool: 'cheap-module-source-map',
+  stats: {
+    errorDetails: true,
   },
 };
-
-module.exports = config;
