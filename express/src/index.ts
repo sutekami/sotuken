@@ -1,18 +1,20 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import { createServer } from 'http';
+import router from 'routes';
 import { Server } from 'socket.io';
 
 const app = express();
 const server = createServer(app);
+const port = 3000;
 const io = new Server(server, {
   cors: {
     origin: 'http://localhost:5000',
   },
 });
-const port = 3000;
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true}));
+// CORS設定・CSRF対策、POST等のdata受け取り可能にする設定
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', ['http://localhost:5000']);
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
@@ -20,26 +22,19 @@ app.use((req, res, next) => {
   next();
 })
 
-app.get('/', (req, res) => {
-  res.send('this is root');
-})
-
-// routing
-// signup
-// app.use('/signup', require('./signup'));
-
-// signin
-// app.use('/signin', require('./signin'));
+// router
+app.use('/', router);
 
 io.on('connection', (socket) => {
   console.log('a user connected');
-  socket.on('teset', (msg) => {
+  socket.on('test', (msg) => {
     console.log(msg);
     io.emit('test', msg);
   })
-});
+})
 
-app.use((err, req, res, next) => {
+// errorHandling (切り分けたい)
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
 
   switch(err.name) {
@@ -55,6 +50,7 @@ app.use((err, req, res, next) => {
   }
 })
 
+// listen
 server.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Example app listening on port ${port}`)
 })
