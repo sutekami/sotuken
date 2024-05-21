@@ -14,7 +14,7 @@
         location.href = "/mypage"
       })
       .catch((data) => {
-        toastr.handleError(data.response.data.err, 5);
+        toastr.handleError(data.response.data.err);
       });
   }
 </script>

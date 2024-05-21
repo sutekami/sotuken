@@ -48,8 +48,10 @@ class BaseValidator {
   validatePassword(key) {
     this.presence(key);
     this.gt(key, 8);
-    const regexp = /[A-Z]{1,}[a-z]{1,}[.!@#$%&*-+_]{1,}[0-9]/g;
-    this.inclusion(key, regexp);
+    const regexps = [/[A-Z]{1,}/g, /[a-z]{1,}/g, /[.!@#$%&*-+_]{1,}/g, /[0-9]{1,}/g];
+    regexps.forEach((value, index, arr) => {
+      this.inclusion(key, value);
+    })
   }
 
   throwError(message) {

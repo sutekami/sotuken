@@ -13,6 +13,6 @@ const main = async () => {
 }
 
 module.exports = {
-  main: () => main().then((data) => disconnect(data)),
-  create: (data) => create(data).then((data) => disconnect(data)),
+  main: () => main().finally((data) => disconnect(data)),
+  create: (data) => create(data).finally((data) => disconnect(data)),
 }

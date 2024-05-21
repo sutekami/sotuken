@@ -1,6 +1,6 @@
 import { browser } from "$app/environment";
 
-const baseHandler = (msg, status, durationSec=10) => {
+const baseHandler = (msg, status, durationSec=7) => {
   if ( browser ) {
     const id = crypto.randomUUID();
     const body = document.querySelector('body');
