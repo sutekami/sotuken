@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "dev": "yarn webpack --config ./webpack.config.js --watch & yarn nodemon ./.dist/index.bundle.js"
+  },
   "name": "app",
   "packageManager": "yarn@4.2.2",
   "devDependencies": {
@@ -7,6 +10,7 @@
     "@types/node": "^20.12.12",
     "bufferutil": "^4.0.8",
     "express": "^4.19.2",
+    "nodemon": "^3.1.0",
     "path": "^0.12.7",
     "prisma": "^5.14.0",
     "socket.io": "^4.7.5",
