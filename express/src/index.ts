@@ -1,7 +1,8 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { createServer } from 'http';
-import router from 'routes';
+import router from 'infra/router';
 import { Server } from 'socket.io';
+import "express-async-errors";
 
 const app = express();
 const server = createServer(app);
@@ -33,7 +34,7 @@ io.on('connection', (socket) => {
   })
 })
 
-// errorHandling (切り分けたい)
+// errorHandling（切り分けたい）
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
 

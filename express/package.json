@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "yarn webpack --config ./webpack.config.js --watch & yarn nodemon ./.dist/index.bundle.js"
+    "dev": "yarn nodemon .dist/index.bundle.js --delay 1 & yarn webpack --config ./webpack.config.js --watch"
   },
   "name": "app",
   "packageManager": "yarn@4.2.2",
@@ -10,6 +10,7 @@
     "@types/node": "^20.12.12",
     "bufferutil": "^4.0.8",
     "express": "^4.19.2",
+    "express-async-errors": "^3.1.1",
     "nodemon": "^3.1.0",
     "path": "^0.12.7",
     "prisma": "^5.14.0",

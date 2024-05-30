@@ -1,4 +1,5 @@
 import adapter from '@sveltejs/adapter-auto';
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -7,7 +8,7 @@ const config = {
 		// If your environment is not supported or you settled on a specific environment, switch out the adapter.
 		// See https://kit.svelte.dev/docs/adapters for more information about adapters.
 		alias: {
-			'api': 'src/lib/index.js',
+			"store": "src/store/",
 		},
 		adapter: adapter(),
 		files: {
@@ -17,7 +18,8 @@ const config = {
 				universal: 'src/hooks/hooks.js',
 			},
 		},
-	}
+	},
+	preprocess: vitePreprocess(),
 };
 
 export default config;

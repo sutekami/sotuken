@@ -1,21 +1,21 @@
-<script>
+<script lang="ts">
   import api from "$lib/api";
   import toastr from "$lib/utils/toastr";
   import Input from "$lib/components/Input.svelte";
   import Form from "$lib/components/Form.svelte";
   import Button from "$lib/components/Button.svelte";
 
-  let name, email, password;
+  let name: string, email: string, password: string;
 
   const handleSave = async () => {
     const params = { name, email, password };
     await api.signup.create({ params })
-      .then(() => {
-        location.href = "/mypage"
-      })
-      .catch((data) => {
-        toastr.handleError(data.response.data.err);
-      });
+      // .then(() => {
+      //   location.href = "/mypage"
+      // })
+      // .catch((data) => {
+      //   toastr.handleError(data.response.data.err);
+      // });
   }
 </script>
 
