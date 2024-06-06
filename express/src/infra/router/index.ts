@@ -1,7 +1,8 @@
 import express from "express";
 import "express-async-errors";
+import { SignInController } from "interfaces/controller/signIn/SignInController";
 
-import { CreateUserController } from "interfaces/controller/signup/CreateUserController";
+import { SignUpController } from "interfaces/controller/signUp/SignUpController";
 
 const router = express.Router();
 
@@ -15,13 +16,17 @@ router.route('/signup')
   .get((req, res) => {
     res.send('')
   })
-  .post(async (req, res, next) => {
-    const user = await new CreateUserController(req.body).handle();
+  .post(async (req, res) => {
+    const user = await new SignUpController(req.body).handle();
     res.status(200).json(user);
   });
 
-router.route('/signin');
+router.route('/signin')
+  .post(async (req, res) => {
+    const user = await new SignInController(req.body).handle();
+    res.status(200).json(user);
+  });
 
-router.route('/mypage');
+router.route('/mypage')
 
 export default router;

@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient();
 
-export class UserRepository implements IRepository {
+export class UserRepository {
   constructor() {}
 
   async find(id: number)  {
@@ -12,7 +12,15 @@ export class UserRepository implements IRepository {
     return user;
   };
 
-  find_by() {};
+  async find_by(params: UserType) {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: params.email
+      },
+    });
+    await prisma.$disconnect();
+    return user;
+  };
 
   async create(params: UserType) {
     const user = await prisma.user.create({
@@ -25,6 +33,4 @@ export class UserRepository implements IRepository {
     await prisma.$disconnect();
     return user;
   };
-
-  where () {}
 }

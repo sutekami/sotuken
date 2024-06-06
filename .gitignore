@@ -1,3 +1,5 @@
 mysql/.data
 express/node_modules
 express/.env
+radis
+*.rdb

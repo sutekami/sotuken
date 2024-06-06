@@ -3,6 +3,15 @@ import { createServer } from 'http';
 import router from 'infra/router';
 import { Server } from 'socket.io';
 import "express-async-errors";
+import expressSession from 'express-session';
+import RedisStore from 'connect-redis';
+import Redis from "ioredis";
+
+declare module 'express-session' {
+  interface SessionData {
+    sTest: string;
+  }
+}
 
 const app = express();
 const server = createServer(app);
@@ -12,14 +21,36 @@ const io = new Server(server, {
     origin: 'http://localhost:5000',
   },
 });
+const redis = new Redis(6379, "redis");
+const store = new RedisStore({ client: redis });
 
 // CORS設定・CSRF対策、POST等のdata受け取り可能にする設定
-app.use(express.json())
+app.set('trust proxy', 1);
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  expressSession({
+    secret: 's3Cur3',
+    name: 'session',
+    resave: false,
+    saveUninitialized: true,
+    store,
+  })
+);
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', ['http://localhost:5000']);
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
   res.header('Access-Control-Allow-Headers', 'Content-Type, x-request_with, XMLHttpRequest')
+  res.header('Access-Control-Allow-Credentials', 'true')
+  next();
+});
+
+// session設定、ここでユーザーセッションが残っている場合は、userを丸ごと返す
+app.use((req, res, next) => {
+  const { session } = req;
+  console.log(session.id)
+  if (session.sTest) console.log(session.sTest);
+  else session.sTest = "test";
   next();
 })
 

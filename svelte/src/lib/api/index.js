@@ -6,7 +6,8 @@ const axiosInstance = axios.create({
     'Content-Type': 'application/json',
     'X-Request_With': 'XMLHttpRequest',
   },
-  responseType: 'json'
+  responseType: 'json',
+  withCredentials: true,
 });
 
 const api = {
@@ -18,6 +19,17 @@ const api = {
     create: ({params}) => {
       const config = {
         url: '/signup',
+        method: 'post',
+        data: params,
+      };
+      return axiosInstance.request(config);
+    },
+  },
+  signin: {
+    index: () => {},
+    auth: ({params}) => {
+      const config = {
+        url: '/signin',
         method: 'post',
         data: params,
       };
