@@ -9,7 +9,7 @@ import Redis from "ioredis";
 
 declare module 'express-session' {
   interface SessionData {
-    sTest: string;
+    userId: number;
   }
 }
 
@@ -44,15 +44,6 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Credentials', 'true')
   next();
 });
-
-// session設定、ここでユーザーセッションが残っている場合は、userを丸ごと返す
-app.use((req, res, next) => {
-  const { session } = req;
-  console.log(session.id)
-  if (session.sTest) console.log(session.sTest);
-  else session.sTest = "test";
-  next();
-})
 
 // router
 app.use('/', router);

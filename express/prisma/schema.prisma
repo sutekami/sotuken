@@ -12,9 +12,49 @@ model User {
   name      String
   email     String   @unique
   password  String
+  issues    Issue[]
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([userId])
   @@map("user")
+}
+
+model Issue {
+  issueId       Int            @id @default(autoincrement()) @map("issue_id")
+  userId        Int?
+  user          User?          @relation(fields: [userId], references: [userId])
+  title         String
+  issueSections IssueSection[]
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  @@index([issueId, userId])
+  @@map("issue")
+}
+
+model IssueSection {
+  issueSectionId        Int                    @id @default(autoincrement()) @map("issue_section_id")
+  issueId               Int
+  issue                 Issue                  @relation(fields: [issueId], references: [issueId])
+  type                  String
+  title                 String
+  issueSectionalOptions IssueSectionalOption[]
+  createdAt             DateTime               @default(now()) @map("created_at")
+  updatedAt             DateTime               @updatedAt @map("updated_at")
+
+  @@index([issueSectionId, issueId])
+  @@map("issue_section")
+}
+
+model IssueSectionalOption {
+  issueSectionalOptionId Int          @id @default(autoincrement()) @map("issue_sectional_option_id")
+  issueSectionId         Int
+  issueSection           IssueSection @relation(fields: [issueSectionId], references: [issueSectionId])
+  body                   String
+  createdAt              DateTime     @default(now()) @map("created_at")
+  updatedAt              DateTime     @updatedAt @map("updated_at")
+
+  @@index([issueSectionalOptionId, issueSectionId])
+  @@map("issue_sectional_option")
 }

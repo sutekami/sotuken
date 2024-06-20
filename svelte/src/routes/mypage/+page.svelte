@@ -5,12 +5,14 @@
   // client側は、クライアント側のみで行いたいマウント時の処理を書くのが一般的かも
   // つまり、server側ではclient（svelte）のみの処理では解決できないものを
   // +page.Server.jsに入れる感じかも
-  import { writableUser } from "store/user";
-  import { get } from 'svelte/store';
+  // getはそもそもsubscribeされないから、即時通知されない、即時通知がいいならreadonlyで読み込み専用にする
+  import { writableUser } from "$lib/store/user";
+  import { get, readonly } from 'svelte/store';
 
-  let user = get(writableUser);
+  let user = readonly(writableUser);
 </script>
 <h1>this is mypage</h1>
-<h2>{user.name}</h2>
+<h2>name: {$user.name}</h2>
+<h2>email: {$user.email}</h2>
 
 <style></style>

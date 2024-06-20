@@ -1,36 +1,32 @@
 <script lang="ts">
   import { Form, Input, Button } from "$lib/components";
   import api from "$lib/api";
-  import { writableUser } from "store/user";
+  import { writableUser } from "$lib/store/user";
 
-  let name: string, email: string, password: string;
+  let email: string, password: string;
   const handleSave = async () => {
-    const params = { name, email, password }
+    const params = { email, password }
     await api.signin.auth({ params })
       .then((data) => {
-        console.log(data);
-        console.log(data.headers)
         writableUser.set({
           userId: data.data.userId,
           name: data.data.name,
           email: data.data.email,
-        })
+        });
+        location.href = "/mypage";
       })
       .catch(() => {})
   };
 </script>
 
 <div class="form">
-  <h1>{$writableUser.name}</h1>
-  <Form title="サインイン" on:save={handleSave} --width-px="700px">
-    <Input title="ユーザー名" bind:value={name} />
+  <Form title="サインイン" --width-px="700px">
     <Input title="メールアドレス" type="email" bind:value={email} />
     <Input title="パスワード" type="password" bind:value={password} />
     <div class="btn">
-      <Button on:save={handleSave} label="登録する" />
+      <Button on:save={handleSave} label="ログインする" />
     </div>
   </Form>
-  <a href="/mypage">mypage</a>
 </div>
 
 <style>

@@ -1,4 +1,12 @@
-// hooksが毎回呼ばれるので、ここでexpressにアクセスし、ユーザー情報があれば取ってくる
-// それをwirtableUserに追加
-console.log('hooks')
-console.log('hooks 2')
+import api from "$lib/api";
+import { writableUser } from "$lib/store/user";
+
+await api.root.session()
+  .then((data) => {
+    writableUser.set({
+      userId: data.data.userId,
+      email: data.data.email,
+      name: data.data.email,
+    });
+  })
+  .catch(() => {})

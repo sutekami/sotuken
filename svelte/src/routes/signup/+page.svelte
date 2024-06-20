@@ -8,14 +8,15 @@
   let name: string, email: string, password: string;
 
   const handleSave = async () => {
-    const params = { name, email, password };
+    let params: Record<string, string>;
+    params = { name, email, password };
     await api.signup.create({ params })
-      // .then(() => {
-      //   location.href = "/mypage"
-      // })
-      // .catch((data) => {
-      //   toastr.handleError(data.response.data.err);
-      // });
+      .then(() => {
+        location.href = "/mypage"
+      })
+      .catch((data) => {
+        toastr.handleError(data.response.data.err);
+      });
   }
 </script>
 

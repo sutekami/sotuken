@@ -11,6 +11,12 @@ const axiosInstance = axios.create({
 });
 
 const api = {
+  root: {
+    session: () => {
+      const config = { url: '/', method: 'get' };
+      return axiosInstance.request(config);
+    },
+  },
   signup: {
     index: () => {
       const config = { url: '/signup', method: 'get' }
