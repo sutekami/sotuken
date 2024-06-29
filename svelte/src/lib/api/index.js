@@ -42,6 +42,16 @@ const api = {
       return axiosInstance.request(config);
     },
   },
+  new_issue: {
+    create: ({params}) => {
+      const config = {
+        url: '/new-issue',
+        method: "post",
+        data: params,
+      };
+      return axiosInstance.request(config);
+    },
+  }
 };
 
 export default api;

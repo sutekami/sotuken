@@ -1,3 +1,7 @@
 interface IController {
-  handle: Function;
+  index?(): any;
+  show?(): any;
+  create?(): any;
+  update?(): any;
+  [key: string]: any;
 }

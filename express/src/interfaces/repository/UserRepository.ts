@@ -1,9 +1,10 @@
+import { User } from '@prisma/client';
 import { prisma } from 'infra/prisma_client';
 
-export class UserRepository implements IRepository {
+export class UserRepository implements IRepository<User> {
   constructor() {}
 
-  static async find(id: number)  {
+  static async find(id: number) {
     const user = await prisma.user.findUnique({where: {
       userId: id
     }});
@@ -11,7 +12,7 @@ export class UserRepository implements IRepository {
     return user;
   };
 
-  static async find_by(params: UserType) {
+  static async find_by(params: User) {
     const user = await prisma.user.findUnique({
       where: {
         email: params.email
@@ -21,7 +22,7 @@ export class UserRepository implements IRepository {
     return user;
   };
 
-  static async create(params: UserType) {
+  static async create(params: User) {
     const user = await prisma.user.create({
       data: {
         name: params.name,

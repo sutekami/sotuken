@@ -37,7 +37,6 @@ model IssueSection {
   issueSectionId        Int                    @id @default(autoincrement()) @map("issue_section_id")
   issueId               Int
   issue                 Issue                  @relation(fields: [issueId], references: [issueId])
-  type                  String
   title                 String
   issueSectionalOptions IssueSectionalOption[]
   createdAt             DateTime               @default(now()) @map("created_at")

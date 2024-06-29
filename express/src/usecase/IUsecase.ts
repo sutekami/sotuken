@@ -1,3 +1,3 @@
 interface IUsecase {
-  handle<T>(): T;
+  handle(): Promise<any>;
 }

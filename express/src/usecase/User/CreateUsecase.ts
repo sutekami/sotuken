@@ -1,9 +1,10 @@
+import { User } from "@prisma/client";
 import { UserRepository } from "interfaces/repository/UserRepository";
 
-export class CreateUserUsecase {
-  private params: UserType;
+export class CreateUsecase implements IUsecase {
+  private params: User;
 
-  constructor(params: UserType) {
+  constructor(params: User) {
     this.params = params;
   };
 

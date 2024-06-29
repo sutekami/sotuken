@@ -1,1 +1,3 @@
-console.log('this is page.js')
+export function load({ params }) {
+
+}
