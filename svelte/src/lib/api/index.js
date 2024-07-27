@@ -51,7 +51,16 @@ const api = {
       };
       return axiosInstance.request(config);
     },
-  }
+  },
+  vote: {
+    createRoom: () => {
+      const config = {
+        url: '/vote',
+        method: 'get',
+      };
+      return axiosInstance.request(config);
+    },
+  },
 };
 
 export default api;

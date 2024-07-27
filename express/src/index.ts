@@ -6,6 +6,7 @@ import "express-async-errors";
 import expressSession from 'express-session';
 import RedisStore from 'connect-redis';
 import Redis from "ioredis";
+import { webSocketRouter } from 'infra/router/websocket_router';
 
 declare module 'express-session' {
   interface SessionData {
@@ -50,10 +51,7 @@ app.use('/', router);
 
 io.on('connection', (socket) => {
   console.log('a user connected');
-  socket.on('test', (msg) => {
-    console.log(msg);
-    io.emit('test', msg);
-  })
+  webSocketRouter(socket);
 })
 
 // errorHandling（切り分けたい）

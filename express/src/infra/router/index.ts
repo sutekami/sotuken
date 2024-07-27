@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import express from "express";
 import "express-async-errors";
 import * as bundle from 'infra/router/bundle';
@@ -43,6 +44,12 @@ router.route('/new-issue')
   .post(async (req, res) => {
     const issue = await new bundle.IssueController(req.body).create();
     res.status(200).json(issue);
+  })
+
+router.route('/vote')
+  .get(async (req, res) => {
+    const roomId = randomUUID();
+    res.status(200).json({roomId})
   })
 
 export default router;

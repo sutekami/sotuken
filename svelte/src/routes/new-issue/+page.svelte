@@ -66,8 +66,6 @@
   }
 </script>
 
-<h1>問題作成するところ</h1>
-
 <div>
   <h4>タイトル</h4>
   <input type="text" placeholder="タイトル" bind:value={issueTitle}>
@@ -80,7 +78,7 @@
       <h4>問題・設問</h4>
       <input type="text" placeholder="タイトル" on:change={(e) => changeIssueSectionTitle(e, issueSectionId)}>
       <input type="button" value="選択肢を追加" on:click={(e) => addIssueSectionalOption(e, issueSectionId)}>
-      <input type="button" value="問題・質問を削除" on:change={(e) => removeIssueSection(e, issueSectionId)}>
+      <input type="button" value="問題・質問を削除" on:click={(e) => removeIssueSection(e, issueSectionId)}>
       <div class="section">
         {#key issueSectionalOptions}
           {#each getIssueSectionalOptionsWithSectionId(issueSectionId) as {issueSectionalOptionId, body} (issueSectionalOptionId)}
