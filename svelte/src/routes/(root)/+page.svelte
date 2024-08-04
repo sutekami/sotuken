@@ -2,6 +2,7 @@
   // import { io } from 'socket.io-client';
 
   // const socket = io('ws://localhost:3000');
+  import { user } from "$lib/store/user";
   import { count } from "./store";
 
   export let data;
@@ -16,6 +17,7 @@
   // }
 </script>
 
+<h3>{user.userId}</h3>
 <div>{data.message}</div>
 <div>{$count}</div>
 <textarea bind:value={test}></textarea>

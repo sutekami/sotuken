@@ -13,7 +13,7 @@ const axiosInstance = axios.create({
 const api = {
   root: {
     session: () => {
-      const config = { url: '/', method: 'get' };
+      const config = { url: '/session', method: 'get' };
       return axiosInstance.request(config);
     },
   },
@@ -51,6 +51,15 @@ const api = {
       };
       return axiosInstance.request(config);
     },
+  },
+  issues: {
+    index: (userId) => {
+      const config = {
+        url: `/issues/${userId}`,
+        method: 'get',
+      };
+      return axiosInstance.request(config);
+    }
   },
   vote: {
     createRoom: () => {

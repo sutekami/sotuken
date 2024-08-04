@@ -9,7 +9,7 @@ type Issue = {
 
 const writableIssues = writable<Array<Issue>>()
 
-let issues;
+let issues: Array<Issue>;
 
 writableIssues.subscribe((value) => {
   issues = value;

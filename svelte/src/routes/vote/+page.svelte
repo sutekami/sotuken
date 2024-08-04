@@ -1,8 +1,19 @@
 <script>
   import api from "$lib/api";
+  import { onMount } from "svelte";
+  import { user } from "$lib/store/user";
+  import { goto } from "$app/navigation";
+
+  export let data;
+
+  onMount(() => {
+    if (data.user) return;
+    goto('/signin')
+  })
+
   async function createRoom() {
     const res = await api.vote.createRoom();
-    location.href = `vote/host/${res.data.roomId}`
+    goto(`vote/host/${res.data.roomId}`);
   }
 </script>
 

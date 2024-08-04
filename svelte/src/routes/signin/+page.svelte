@@ -1,21 +1,19 @@
 <script lang="ts">
   import { Form, Input, Button } from "$lib/components";
-  import api from "$lib/api";
-  import { writableUser } from "$lib/store/user";
+  import Client from "$lib/client";
+
+  import { goto } from "$app/navigation";
 
   let email: string, password: string;
   const handleSave = async () => {
     const params = { email, password }
-    await api.signin.auth({ params })
-      .then((data) => {
-        writableUser.set({
-          userId: data.data.userId,
-          name: data.data.name,
-          email: data.data.email,
-        });
-        location.href = "/mypage";
-      })
-      .catch(() => {})
+    const res = await new Client(Client.CLIENT, {
+      url: '/api/signin',
+      method: "POST",
+      body: JSON.stringify(params),
+    }).fetch();
+
+    goto('/mypage');
   };
 </script>
 

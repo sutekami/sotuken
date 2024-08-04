@@ -13,6 +13,8 @@
   socket.on('test', (arg) => {
     console.log(arg);
   })
+
+  socket.on('receive_room_chat', msg => {console.log(msg)});
 </script>
 
 <h2>this is guest page!!</h2>

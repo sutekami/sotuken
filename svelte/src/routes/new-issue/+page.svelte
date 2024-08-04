@@ -46,6 +46,10 @@
     })
   }
 
+  function removeIssueSectionalOption(event: EventElements, id?: string | number) {
+    issueSectionalOptions = issueSectionalOptions.filter((elem) => elem.issueSectionalOptionId !== id);
+  }
+
   async function save() {
     const newIssueSections = issueSections.map((elem) => {
       let options = issueSectionalOptions.filter((option) => {
@@ -83,7 +87,8 @@
         {#key issueSectionalOptions}
           {#each getIssueSectionalOptionsWithSectionId(issueSectionId) as {issueSectionalOptionId, body} (issueSectionalOptionId)}
             <h4>選択肢</h4>
-            <input type="text" placeholder="選択肢" value={body} on:change={(e) => {changeIssueSectionalOptionBody(e, issueSectionalOptionId)}}>
+            <input type="text" placeholder="選択肢" value={body} on:change={(e) => changeIssueSectionalOptionBody(e, issueSectionalOptionId)}>
+            <input type="button" value="選択肢を削除" on:click={(e) => removeIssueSectionalOption(e, issueSectionalOptionId)}>
             {:else}
             <p>選択肢を追加してください</p>
           {/each}
