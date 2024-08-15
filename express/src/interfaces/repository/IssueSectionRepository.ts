@@ -3,9 +3,15 @@ import { prisma } from "infra/prisma_client";
 
 export class IssueSeectionRepository implements IRepository<IssueSection> {
   static async find(id: number) {
-    const issueSection = await prisma.issueSection.findUnique({where: {
-      issueSectionId: id,
-    }});
+    const issueSection = await prisma.issueSection.findUnique(
+      {
+        where: {
+          issueSectionId: id,
+        },
+        include: {
+          issueSectionalOptions: true,
+        },
+      });
     await prisma.$disconnect();
     return issueSection;
   }

@@ -1,6 +1,6 @@
 <script lang="ts">
   import api from '$lib/api';
-  import { user, writableUser } from '$lib/store/user';
+  import { user } from '$lib/store/user';
 
   let issueTitle: string;
   let issueSections: Array<IssueSection> = [];

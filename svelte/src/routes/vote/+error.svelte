@@ -1,14 +1,13 @@
 <script>
   import { page } from "$app/stores";
   import { onMount } from "svelte";
-  import { goto } from "$app/navigation";
 
   let displaySeconds = 5;
 
   onMount(async () => setTimeredirectPage());
 
   async function setTimeredirectPage() {
-    if (displaySeconds == 0) return goto('/vote');
+    if (displaySeconds == 0) return location.href = "/signin";
     new Promise(resolve => setTimeout(() => {
       displaySeconds--;
       setTimeredirectPage();

@@ -27,4 +27,21 @@ export class IssueRepository implements IRepository<Issue> {
     await prisma.$disconnect();
     return issue;
   }
+
+  static async find(issueId: number) {
+    const issue = await prisma.issue.findUnique({
+      where: {
+        issueId: issueId,
+      },
+      include: {
+        issueSections: {
+          include: {
+            issueSectionalOptions: true,
+          },
+        },
+      },
+    });
+
+    return issue;
+  }
 }

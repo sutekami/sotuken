@@ -16,6 +16,7 @@ export async function load({ params, cookies }) {
   const issues = await fetchIssues({ params, cookies, userId: user.userId });
   return {
     issues: await issues.json(),
+    voteStatus: await fetchCheckRoomId.json(),
     roomId: roomId,
   };
 }

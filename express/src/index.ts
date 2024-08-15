@@ -48,7 +48,7 @@ app.use('/', router);
 
 io.on('connection', (socket) => {
   console.log('a user connected');
-  webSocketRouter(socket);
+  webSocketRouter(socket, io);
 })
 
 // errorHandling（切り分けたい）

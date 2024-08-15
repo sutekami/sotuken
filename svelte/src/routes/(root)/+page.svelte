@@ -1,8 +1,8 @@
 <script>
   // import { io } from 'socket.io-client';
+  import { user } from "$lib/store/user";
 
   // const socket = io('ws://localhost:3000');
-  import { user } from "$lib/store/user";
   import { count } from "./store";
 
   export let data;

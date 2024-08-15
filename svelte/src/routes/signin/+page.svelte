@@ -1,8 +1,7 @@
 <script lang="ts">
   import { Form, Input, Button } from "$lib/components";
   import Client from "$lib/client";
-
-  import { goto } from "$app/navigation";
+  import { redirect } from "@sveltejs/kit";
 
   let email: string, password: string;
   const handleSave = async () => {
@@ -13,7 +12,7 @@
       body: JSON.stringify(params),
     }).fetch();
 
-    goto('/mypage');
+    location.href = '/mypage';
   };
 </script>
 

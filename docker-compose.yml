@@ -21,7 +21,7 @@ services:
       - mysql
       - redis
       - express
-    command: npm run dev
+    command: npm run dev -- --force
   mysql:
     build: ./mysql
     ports:
