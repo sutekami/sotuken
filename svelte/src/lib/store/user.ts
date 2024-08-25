@@ -1,29 +1,25 @@
-import { writable, derived } from "svelte/store";
+import { writable } from "svelte/store";
 
-// type
-type User = {
-  userId: number | null;
-  name: string | null;
-  email: string | null;
+export type UserType = {
+  userId?: number,
+  name?: string,
+  email?: string,
 }
 
-// based
-const writableUser = writable<User>({
-  userId: null,
-  name: null,
-  email: null,
-})
+function createUser() {
+  const { subscribe, set, update } = writable<UserType>({});
 
-const { subscribe, set, update } = writableUser;
-
-let user: User;
-subscribe(value => user = value);
-
-function updateUser({ userId, name, email }) {
-  update(user => { return { userId, name, email } });
+  return {
+    subscribe,
+    updateUser: (params: UserType) => update((v) => {
+      return {
+        userId: params.userId || v.userId,
+        name: params.name || v.name,
+        email: params.email || v.email,
+      };
+    }),
+    reset: () => set({}),
+  }
 }
 
-export {
-  user,
-  updateUser,
-};
+export const user = createUser();

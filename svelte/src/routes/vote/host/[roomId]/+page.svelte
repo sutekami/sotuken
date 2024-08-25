@@ -1,7 +1,7 @@
 <script>
   import { io } from "socket.io-client";
   import { onMount } from "svelte";
-  import { writableIssues } from "$lib/store/issue";
+  import { issues } from "$lib/store/issue";
   import Menu from "./Menu.svelte";
 
   export let data;
@@ -11,19 +11,19 @@
   const socket = io('ws://localhost:3000')
 
   onMount(async () => {
-    writableIssues.set(data.issues);
-    socket.emit('join_vote_room', data.roomId)
+    issues.updateIssues(data.issues);
+    socket.emit('joinVoteRoom', data.roomId)
     inProgress = data.voteStatus.inProgress;
-    if (inProgress) socket.emit('fetch_issue_section', data.roomId);
+    if (inProgress) socket.emit('fetchIssueSection', data.roomId);
   })
 
-  socket.on('test', (arg) => {
-    console.log(arg);
-  })
-
-  socket.on('receive_start_vote', arg => {
+  socket.on('voteStarted', arg => {
     inProgress = arg.inProgress;
-    socket.emit('fetch_issue_section', data.roomId);
+    socket.emit('fetchIssueSection', data.roomId);
+  })
+
+  socket.on('voteFinished', arg => {
+    inProgress = arg.inProgress;
   })
 
   async function copy() {
@@ -37,12 +37,22 @@
 
   async function start() {
     if (!selectedIssueId) return alert('投票を行う問題・質問を選択してください')
-    socket.emit('start_vote', data.roomId, selectedIssueId);
+    socket.emit('startVote', data.roomId, selectedIssueId);
+  }
+
+  function resetStart() {
+    socket.emit('startVote', data.roomId, selectedIssueId);
+  }
+
+  function reset() {
+    socket.emit('reset', data.roomId);
   }
 </script>
 
 {#if inProgress}
   <p>ここTrue</p>
+  <button on:click={resetStart}>reset start</button>
+  <button on:click={reset}>simple reset</button>
 {:else}
   <Menu
     bind:data={data}

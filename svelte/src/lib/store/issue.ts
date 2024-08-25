@@ -1,18 +1,32 @@
 import { writable } from "svelte/store";
+import type { IssueSectionType } from "./issue_section";
 
-type Issue = {
+export type IssueType = {
   issueId?: number;
   userId?: number;
   title?: string;
-  issueSections?: Array<IssueSection>;
+  issueSections?: Array<IssueSectionType>;
 }
 
-const writableIssues = writable<Array<Issue>>()
+function createIssue() {
+  const { subscribe, set, update } = writable<IssueType>({});
 
-let issues: Array<Issue>;
+  return {
+    subscribe,
+    updateIssue: (params: IssueType) => update(() => params),
+    reset: () => set({}),
+  }
+}
 
-writableIssues.subscribe((value) => {
-  issues = value;
-})
+function createIssues() {
+  const { subscribe, set, update } = writable<Array<IssueType>>([]);
 
-export { writableIssues, issues }
+  return {
+    subscribe,
+    updateIssues: (params: Array<IssueType>) => update(() => params),
+    reset: () => set([]),
+  }
+}
+
+export const issue = createIssue();
+export const issues = createIssues();

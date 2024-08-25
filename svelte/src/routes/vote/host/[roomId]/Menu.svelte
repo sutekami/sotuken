@@ -1,5 +1,5 @@
 <script>
-  import { writableIssues } from "$lib/store/issue";
+  import { issues } from "$lib/store/issue";
   import { createEventDispatcher } from "svelte";
   export let data;
 
@@ -19,9 +19,7 @@
   <input type="button" value="start" on:click={() => dispatch('start')}>
 </div>
 
-{#if !!$writableIssues}
-  {#each $writableIssues as issue}
-    <input type="radio" name="issue" bind:value={issue.issueId} id="issue_id_{issue.issueId}" on:click={(e) => dispatch('selected', e)}>
-    <label for="issue_id_{issue.issueId}">{ issue.title }</label>
-  {/each}
-{/if}
+{#each $issues || [] as issue}
+  <input type="radio" name="issue" bind:value={issue.issueId} id="issue_id_{issue.issueId}" on:click={(e) => dispatch('selected', e)}>
+  <label for="issue_id_{issue.issueId}">{ issue.title }</label>
+{/each}
