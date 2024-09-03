@@ -1,13 +1,15 @@
 <script lang="ts">
   import api from '$lib/api';
   import { user } from '$lib/store/user';
+  import type { IssueSectionType } from '$lib/store/issue_section';
+  import type { IssueSectionalOptionType } from '$lib/store/issue_sectional_option';
 
   let issueTitle: string;
-  let issueSections: Array<IssueSection> = [];
-  let issueSectionalOptions: Array<IssueSectionalOption> = [];
+  let issueSections: Array<IssueSectionType> = [];
+  let issueSectionalOptions: Array<IssueSectionalOptionType> = [];
 
   function addIssueSection() {
-    const issueSection: IssueSection = {
+    const issueSection: IssueSectionType = {
       issueSectionId: crypto.randomUUID(),
     }
     issueSections = [ ...issueSections, issueSection ];
@@ -26,7 +28,7 @@
   }
 
   function addIssueSectionalOption(event: EventElements, id?: string | number) {
-    const issueSectionalOption: IssueSectionalOption = {
+    const issueSectionalOption: IssueSectionalOptionType = {
       issueSectionalOptionId: crypto.randomUUID(),
       issueSectionId: id,
       body: '',
@@ -34,7 +36,7 @@
     issueSectionalOptions = [ ...issueSectionalOptions, issueSectionalOption ];
   }
 
-  function getIssueSectionalOptionsWithSectionId(id?: string | number): Array<IssueSectionalOption> {
+  function getIssueSectionalOptionsWithSectionId(id?: string | number): Array<IssueSectionalOptionType> {
     return issueSectionalOptions.filter((elem) => elem.issueSectionId === id);
   }
 
@@ -61,7 +63,7 @@
 
     const issue = {
       title: issueTitle,
-      userId: user.userId,
+      userId: $user.userId,
       issueSections: newIssueSections,
     }
 

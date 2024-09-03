@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Form, Input, Button } from "$lib/components";
   import Client from "$lib/client";
-  import { redirect } from "@sveltejs/kit";
 
   let email: string, password: string;
   const handleSave = async () => {

@@ -21,6 +21,9 @@ export function webSocketRouter(socket: Socket, io: Server) {
     value.issueId = parseInt(issueId);
     value.issueSectionIds = issue?.issueSections.map(v => v.issueSectionId);
     value.currentIssueSectionId = value.issueSectionIds?.shift();
+    value.participantCount = (io.sockets.adapter.rooms.get(roomId)?.size || 1) - 1;
+    value.participantVotedCount = 0;
+    value.voteStatus = {};
 
     await redis.set(BASE_ROOM_ID_KEY + roomId, JSON.stringify(value), 'EX', REDIS_EXPIRE_SECOND);
     socket.emit('voteStarted', value);
@@ -35,11 +38,39 @@ export function webSocketRouter(socket: Socket, io: Server) {
     socket.to(roomId).emit('sendIssueSection', issueSection);
   });
 
-  socket.on('vote', async (roomId) => {
+  socket.on('vote', async (roomId, issueSectionalOptionId) => {
+    const value: roomType = JSON.parse(await redis.get(BASE_ROOM_ID_KEY + roomId) || '{}');
+    value.participantVotedCount = (value.participantVotedCount || 0) + 1;
+    const issueSectionIds = value.issueSectionIds || [];
+    const obj = (value.voteStatus || {});
+    obj[issueSectionalOptionId] = (obj[issueSectionalOptionId] || 0) + 1;
+    value.voteStatus = obj;
+
+    // NOTE: 全員の投票が終わってなければ待ってもらうイベントを発火
+    // TODO: ここに投票したIssueSectionalOptionの状況間管理を行いたい
+    if (value.participantCount !== value.participantVotedCount) {
+      await redis.set(BASE_ROOM_ID_KEY + roomId, JSON.stringify(value), 'EX', REDIS_EXPIRE_SECOND);
+      socket.emit('waitVoteComplate');
+      return;
+    }
+
+    // NOTE: 投票結果を渡す
+    const params = {
+      issueSectionId: value.currentIssueSectionId,
+      voteStatus: value.voteStatus,
+    };
+
+    socket.emit('voteResult', params);
+    socket.to(roomId).emit('voteResult', params);
+  });
+
+  socket.on('nextVote', async (roomId) => {
     const value: roomType = JSON.parse(await redis.get(BASE_ROOM_ID_KEY + roomId) || '{}');
     const issueSectionIds = value.issueSectionIds || [];
+
     // TODO: Redisに入れているRoomIdを削除
     // TODO: roomIdの解散
+    // NOTE: 全ての問題が終われば終了の処理を実行
     if (issueSectionIds.length === 0) {
       value.inProgress = false;
       await redis.set(BASE_ROOM_ID_KEY + roomId, JSON.stringify(value), 'EX', REDIS_EXPIRE_SECOND);
@@ -49,16 +80,20 @@ export function webSocketRouter(socket: Socket, io: Server) {
       return;
     }
 
+    // NOTE: ここから全員が投票し終わった後の処理になる
     const issueSectionId = issueSectionIds.shift();
     let issueSection
     if (issueSectionId)
       issueSection = await bundle.IssueSeectionRepository.find(issueSectionId);
     value.issueSectionIds = issueSectionIds;
     value.currentIssueSectionId = issueSectionId;
+    value.participantVotedCount = 0;
+    value.voteStatus = {};
     await redis.set(BASE_ROOM_ID_KEY + roomId, JSON.stringify(value), 'EX', REDIS_EXPIRE_SECOND);
     socket.emit('sendIssueSection', issueSection);
     socket.to(roomId).emit('sendIssueSection', issueSection)
-  });
+    return;
+  })
 
   socket.on('reset', async (roomId) => {
     const value: roomType = JSON.parse(await redis.get(BASE_ROOM_ID_KEY + roomId) || '{}');

@@ -25,12 +25,13 @@ const REDIS_EXPIRE_SECOND = 3600;
  */
 
 type roomType = {
-  inProgress: boolean,
-  issueId?: number,
-  issueSectionIds?: Array<number>,
-  currentIssueSectionId?: number,
-  participantCount?: number,
-  participantVotedCount?: number,
+  inProgress: boolean,             //
+  issueId?: number,                //
+  issueSectionIds?: Array<number>, //
+  currentIssueSectionId?: number,  //
+  participantCount?: number,       // ゲスト参加者の人数
+  participantVotedCount?: number,  // その問題を投票した人数、設問ごとにリセット
+  voteStatus?: {[key: number]: number},
 }
 
 export { redis, store, roomType, BASE_ROOM_ID_KEY, REDIS_EXPIRE_SECOND }
