@@ -7,6 +7,7 @@
   export let data;
   let selectedIssueId;
   let inProgress;
+  let isResult;
 
   const socket = io('ws://localhost:3000')
 
@@ -25,6 +26,10 @@
   socket.on('voteFinished', arg => {
     inProgress = arg.inProgress;
   })
+
+  socket.on('voteResult', arg => {
+    isResult = true;
+  });
 
   async function copy() {
     const writeText = `localhost:5000/vote/guest/${data.roomId}`;
@@ -47,12 +52,21 @@
   function reset() {
     socket.emit('reset', data.roomId);
   }
+
+  function handleNextVote() {
+    socket.emit('nextVote', data.roomId);
+    isResult = false;
+  }
 </script>
 
 {#if inProgress}
-  <p>ここTrue</p>
   <button on:click={resetStart}>reset start</button>
   <button on:click={reset}>simple reset</button>
+  {#if isResult}
+    <div>
+      <button on:click={handleNextVote}>next vote</button>
+    </div>
+  {/if}
 {:else}
   <Menu
     bind:data={data}
