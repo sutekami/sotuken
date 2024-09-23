@@ -2,10 +2,33 @@ import { Socket, Server } from "socket.io";
 import * as bundle from 'infra/router/bundle';
 import { redis, roomType, BASE_ROOM_ID_KEY, REDIS_EXPIRE_SECOND } from "infra/redis";
 
+async function getRoomValue({ roomId }: { roomId: string }): Promise<roomType> {
+  return JSON.parse(await redis.get(BASE_ROOM_ID_KEY + roomId) || '{}');
+}
+
+async function setRoomValue({ roomId, value }: { roomId: string, value: roomType }) {
+  await redis.set(BASE_ROOM_ID_KEY + roomId, JSON.stringify(value), 'EX', REDIS_EXPIRE_SECOND);
+}
+
 export function webSocketRouter(socket: Socket, io: Server) {
-  socket.on('joinVoteRoom', (roomId) => {
-    socket.join(roomId)
+  socket.on('hostJoinVoteRoom', async (roomId: string, sessionId: string) => {
+    const value: roomType = await getRoomValue({ roomId });
+    if (!value.hostUser?.sessionId) {
+      value.hostUser = { sessionId }
+    }
+    await setRoomValue({ roomId, value });
+    socket.join(roomId);
   })
+
+  socket.on('guestJoinVoteRoom', async (roomId: string, sessionId: string, guestUserName: string) => {
+    const value: roomType = await getRoomValue({ roomId });
+    const obj: { [sessionId: string]: { userName: string } } = {};
+    obj[sessionId] = { userName: guestUserName };
+    value.guestUsers = { ...value.guestUsers, ...obj }
+    await setRoomValue({ roomId, value });
+    socket.join(roomId);
+    socket.emit('successedGuestJoinVoteRoom');
+  });
 
   socket.on('room_chat', (roomId, msg) => {
     socket.to(roomId).emit('receive_room_chat', msg);
@@ -102,6 +125,11 @@ export function webSocketRouter(socket: Socket, io: Server) {
     socket.emit('voteStarted', value);
     socket.to(roomId).emit('voteStarted', value);
   })
+
+  socket.on('debug', async (roomId) => {
+    const value: roomType = JSON.parse(await redis.get(BASE_ROOM_ID_KEY + roomId) || '{}');
+    console.log(value);
+  });
 
   socket.on('disconnect', () => {
     console.log('user disconnect');

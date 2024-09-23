@@ -17,6 +17,7 @@
 <div>
   <input type="button" value="copy invitation" on:click={() => dispatch('copy')}>
   <input type="button" value="start" on:click={() => dispatch('start')}>
+  <input type="button" value="debug" on:click={() => dispatch('debug')}>
 </div>
 
 {#each $issues || [] as issue}

@@ -1,19 +1,19 @@
-<script>
+<script lang="ts">
   import { io } from "socket.io-client";
   import { onMount } from "svelte";
   import { issues } from "$lib/store/issue";
   import Menu from "./Menu.svelte";
 
   export let data;
-  let selectedIssueId;
-  let inProgress;
-  let isResult;
+  let selectedIssueId: number;
+  let inProgress: boolean = false;
+  let isResult: boolean = false;
 
   const socket = io('ws://localhost:3000')
 
   onMount(async () => {
     issues.updateIssues(data.issues);
-    socket.emit('joinVoteRoom', data.roomId)
+    socket.emit('hostJoinVoteRoom', data.roomId, data.sessionId);
     inProgress = data.voteStatus.inProgress;
     if (inProgress) socket.emit('fetchIssueSection', data.roomId);
   })
@@ -36,7 +36,7 @@
     navigator.clipboard.writeText(writeText);
   }
 
-  function selectIssue(event) {
+  function selectIssue(event: CustomEvent<any>) {
     selectedIssueId = event.detail.currentTarget.value;
   }
 
@@ -57,8 +57,13 @@
     socket.emit('nextVote', data.roomId);
     isResult = false;
   }
+
+  function debug() {
+    socket.emit('debug', data.roomId);
+  };
 </script>
 
+<button on:click={debug}>debug</button>
 {#if inProgress}
   <button on:click={resetStart}>reset start</button>
   <button on:click={reset}>simple reset</button>
@@ -73,6 +78,7 @@
     on:selected={selectIssue}
     on:copy={copy}
     on:start={start}
+    on:debug={debug}
   />
 {/if}
 

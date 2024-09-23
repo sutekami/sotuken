@@ -8,6 +8,7 @@
     <li><a href="/">Home</a></li>
     <li><a href="/new-issue">New Issue</a></li>
     <li><a href="/signin">Sign In</a></li>
+    <li><a href="/vote">vote</a></li>
   </nav>
 </header>
 

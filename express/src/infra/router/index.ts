@@ -73,4 +73,13 @@ router.route('/vote/:roomId')
     else res.status(403).json();
   })
 
+router.route('/vote/:roomId/guest')
+  .get(async (req, res) => {
+    const redisKey = BASE_ROOM_ID_KEY + req.params.roomId;
+    const value: roomType = JSON.parse(await redis.get(redisKey) || '{}');
+    const item = { userName: (value.guestUsers || {})[req.cookies["_session_id"]]?.userName };
+    console.log(value);
+    res.status(200).json(item);
+  })
+
 export default router;

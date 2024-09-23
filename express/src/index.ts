@@ -6,6 +6,7 @@ import "express-async-errors";
 import expressSession from 'express-session';
 import { store } from 'infra/redis';
 import { webSocketRouter } from 'infra/router/websocket_router';
+import cookieParser from 'cookie-parser';
 
 declare module 'express-session' {
   interface SessionData {
@@ -22,19 +23,23 @@ const io = new Server(server, {
   },
 });
 
+const sessionMiddleware = expressSession({
+  secret: 's3Cur3',
+  name: '_session_id',
+  resave: true,
+  saveUninitialized: true,
+  store,
+  cookie: {
+    maxAge: 3600 * 24 * 7,
+  },
+})
+
 // CORS設定・CSRF対策、POST等のdata受け取り可能にする設定
 app.set('trust proxy', 1);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  expressSession({
-    secret: 's3Cur3',
-    name: '_session_id',
-    resave: false,
-    saveUninitialized: true,
-    store,
-  })
-);
+app.use(sessionMiddleware);
+app.use(cookieParser());
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:5000');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');

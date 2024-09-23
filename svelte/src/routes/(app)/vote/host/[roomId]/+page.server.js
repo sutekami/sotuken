@@ -18,6 +18,7 @@ export async function load({ params, cookies }) {
     issues: await issues.json(),
     voteStatus: await fetchCheckRoomId.json(),
     roomId: roomId,
+    sessionId: cookies.get("_session_id"),
   };
 }
 

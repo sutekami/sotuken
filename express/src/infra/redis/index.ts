@@ -31,7 +31,12 @@ type roomType = {
   currentIssueSectionId?: number,  //
   participantCount?: number,       // ゲスト参加者の人数
   participantVotedCount?: number,  // その問題を投票した人数、設問ごとにリセット
+  // ここに、issueSectionalOptionのidと、そこにゲストユーザーのsocketを入れる
   voteStatus?: {[key: number]: number},
+  hostUser?: { sessionId: string },
+  guestUsers?: {
+    [sessionId: string]: { userName: string },
+  },
 }
 
 export { redis, store, roomType, BASE_ROOM_ID_KEY, REDIS_EXPIRE_SECOND }

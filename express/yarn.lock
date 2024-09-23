@@ -269,6 +269,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/cookie-parser@npm:^1":
+  version: 1.4.7
+  resolution: "@types/cookie-parser@npm:1.4.7"
+  dependencies:
+    "@types/express": "npm:*"
+  checksum: 10c0/af37fea5399950e59ceb2e1f25c633f3df360c4f17e8b3f26418e672fe5c926a20993b86f8e1df72cfe2c4dc8967d9a18d3d78b5c6a5f751a297d0418e5690fa
+  languageName: node
+  linkType: hard
+
 "@types/cookie@npm:^0.4.1":
   version: 0.4.1
   resolution: "@types/cookie@npm:0.4.1"
@@ -743,12 +752,14 @@ __metadata:
   dependencies:
     "@prisma/client": "npm:^5.15.0"
     "@prismatools/console": "npm:^1.1.0"
+    "@types/cookie-parser": "npm:^1"
     "@types/express": "npm:^4"
     "@types/express-session": "npm:^1"
     "@types/node": "npm:^20.12.12"
     "@types/validator": "npm:^13"
     bufferutil: "npm:^4.0.8"
     connect-redis: "npm:^7.1.1"
+    cookie-parser: "npm:^1.4.6"
     express: "npm:^4.19.2"
     express-async-errors: "npm:^3.1.1"
     express-session: "npm:^1.18.0"
@@ -1164,6 +1175,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cookie-parser@npm:^1.4.6":
+  version: 1.4.6
+  resolution: "cookie-parser@npm:1.4.6"
+  dependencies:
+    cookie: "npm:0.4.1"
+    cookie-signature: "npm:1.0.6"
+  checksum: 10c0/9c2ade5459290802cd472a2d2a6e46fbd7de3e8514e02bfed5edfde892d77733c7f89d9d2015f752a9087680429b416972d7aba748bf6824e21eb680c8556383
+  languageName: node
+  linkType: hard
+
 "cookie-signature@npm:1.0.6":
   version: 1.0.6
   resolution: "cookie-signature@npm:1.0.6"
@@ -1175,6 +1196,13 @@ __metadata:
   version: 1.0.7
   resolution: "cookie-signature@npm:1.0.7"
   checksum: 10c0/e7731ad2995ae2efeed6435ec1e22cdd21afef29d300c27281438b1eab2bae04ef0d1a203928c0afec2cee72aa36540b8747406ebe308ad23c8e8cc3c26c9c51
+  languageName: node
+  linkType: hard
+
+"cookie@npm:0.4.1":
+  version: 0.4.1
+  resolution: "cookie@npm:0.4.1"
+  checksum: 10c0/4d7bc798df3d0f34035977949cd6b7d05bbab47d7dcb868667f460b578a550cd20dec923832b8a3a107ef35aba091a3975e14f79efacf6e39282dc0fed6db4a1
   languageName: node
   linkType: hard
 
