@@ -30,12 +30,7 @@ export function webSocketRouter(socket: Socket, io: Server) {
     socket.emit('successedGuestJoinVoteRoom');
   });
 
-  socket.on('room_chat', (roomId, msg) => {
-    socket.to(roomId).emit('receive_room_chat', msg);
-    socket.emit('receive_room_chat', msg);
-  })
-
-  socket.on('startVote', async (roomId, issueId) => {
+  socket.on('startVote', async (roomId: string, issueId: string) => {
     const value: roomType = JSON.parse(await redis.get(BASE_ROOM_ID_KEY + roomId) || '{}');
     let issue;
     if (issueId) issue = await bundle.IssueRepository.find(parseInt(issueId));
@@ -53,7 +48,7 @@ export function webSocketRouter(socket: Socket, io: Server) {
     socket.to(roomId).emit('voteStarted', value);
   });
 
-  socket.on('fetchIssueSection', async (roomId) => {
+  socket.on('fetchIssueSection', async (roomId: string) => {
     const value: roomType = JSON.parse(await redis.get(BASE_ROOM_ID_KEY + roomId) || '{}');
     let issueSection;
     if (value.currentIssueSectionId) issueSection = await bundle.IssueSeectionRepository.find(value.currentIssueSectionId);
@@ -61,16 +56,25 @@ export function webSocketRouter(socket: Socket, io: Server) {
     socket.to(roomId).emit('sendIssueSection', issueSection);
   });
 
-  socket.on('vote', async (roomId, issueSectionalOptionId) => {
+  socket.on('vote', async (roomId: string, sessionId: string, issueSectionalOptionId: string) => {
     const value: roomType = JSON.parse(await redis.get(BASE_ROOM_ID_KEY + roomId) || '{}');
     value.participantVotedCount = (value.participantVotedCount || 0) + 1;
-    const issueSectionIds = value.issueSectionIds || [];
     const obj = (value.voteStatus || {});
-    obj[issueSectionalOptionId] = (obj[issueSectionalOptionId] || 0) + 1;
+    obj[sessionId] = parseInt(issueSectionalOptionId);
     value.voteStatus = obj;
 
+
+    const voteStatusParams: { [sessionId: string]: { guestUserName: string, optinoId: number } } = {};
+    // TODO: ここで、ユーザーnameごとに投票したデータを親に渡したい
+    for (let [sId, optionId] of Object.entries(value.voteStatus)) {
+      voteStatusParams[sId] = {
+        guestUserName: (value.guestUsers || {})[sId]?.userName,
+        optinoId: optionId,
+      };
+    };
+    socket.emit('voteStatus', value.voteStatus);
+
     // NOTE: 全員の投票が終わってなければ待ってもらうイベントを発火
-    // TODO: ここに投票したIssueSectionalOptionの状況間管理を行いたい
     if (value.participantCount !== value.participantVotedCount) {
       await redis.set(BASE_ROOM_ID_KEY + roomId, JSON.stringify(value), 'EX', REDIS_EXPIRE_SECOND);
       socket.emit('waitVoteComplate');
@@ -87,7 +91,7 @@ export function webSocketRouter(socket: Socket, io: Server) {
     socket.to(roomId).emit('voteResult', params);
   });
 
-  socket.on('nextVote', async (roomId) => {
+  socket.on('nextVote', async (roomId: string) => {
     const value: roomType = JSON.parse(await redis.get(BASE_ROOM_ID_KEY + roomId) || '{}');
     const issueSectionIds = value.issueSectionIds || [];
 
@@ -118,7 +122,7 @@ export function webSocketRouter(socket: Socket, io: Server) {
     return;
   })
 
-  socket.on('reset', async (roomId) => {
+  socket.on('reset', async (roomId: string) => {
     const value: roomType = JSON.parse(await redis.get(BASE_ROOM_ID_KEY + roomId) || '{}');
     value.inProgress = false;
     await redis.set(BASE_ROOM_ID_KEY + roomId, JSON.stringify(value), 'EX', REDIS_EXPIRE_SECOND);
@@ -126,7 +130,7 @@ export function webSocketRouter(socket: Socket, io: Server) {
     socket.to(roomId).emit('voteStarted', value);
   })
 
-  socket.on('debug', async (roomId) => {
+  socket.on('debug', async (roomId: string) => {
     const value: roomType = JSON.parse(await redis.get(BASE_ROOM_ID_KEY + roomId) || '{}');
     console.log(value);
   });

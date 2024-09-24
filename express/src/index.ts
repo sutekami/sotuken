@@ -26,7 +26,6 @@ const io = new Server(server, {
 const sessionMiddleware = expressSession({
   secret: 's3Cur3',
   name: '_session_id',
-  resave: true,
   saveUninitialized: true,
   store,
   cookie: {
@@ -38,7 +37,6 @@ const sessionMiddleware = expressSession({
 app.set('trust proxy', 1);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(sessionMiddleware);
 app.use(cookieParser());
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:5000');
@@ -47,6 +45,7 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Credentials', 'true')
   next();
 });
+app.use(sessionMiddleware);
 
 // router
 app.use('/', router);

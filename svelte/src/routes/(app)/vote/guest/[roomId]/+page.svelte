@@ -49,7 +49,7 @@
 
   function vote() {
     if (!selectedIssueSectionalOptionId) return alert('投票する設問を選択してください');
-    socket.emit('vote', data.roomId, selectedIssueSectionalOptionId);
+    socket.emit('vote', data.roomId, data.sessionId, selectedIssueSectionalOptionId);
   }
 
   function handleClickEnterVoteRoom() {

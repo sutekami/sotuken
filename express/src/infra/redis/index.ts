@@ -32,7 +32,7 @@ type roomType = {
   participantCount?: number,       // ゲスト参加者の人数
   participantVotedCount?: number,  // その問題を投票した人数、設問ごとにリセット
   // ここに、issueSectionalOptionのidと、そこにゲストユーザーのsocketを入れる
-  voteStatus?: {[key: number]: number},
+  voteStatus?: {[sessionId: string]: number},
   hostUser?: { sessionId: string },
   guestUsers?: {
     [sessionId: string]: { userName: string },

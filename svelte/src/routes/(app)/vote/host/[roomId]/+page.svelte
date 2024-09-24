@@ -31,6 +31,10 @@
     isResult = true;
   });
 
+  socket.on('voteStatus', arg => {
+    console.log(arg);
+  });
+
   async function copy() {
     const writeText = `localhost:5000/vote/guest/${data.roomId}`;
     navigator.clipboard.writeText(writeText);
