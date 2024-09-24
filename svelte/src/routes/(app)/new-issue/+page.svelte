@@ -3,7 +3,14 @@
   import { user } from '$lib/store/user';
   import type { IssueSectionType } from '$lib/store/issue_section';
   import type { IssueSectionalOptionType } from '$lib/store/issue_sectional_option';
+  import { onMount } from 'svelte';
 
+  onMount(() => {
+    const { email, name, userId } = data.user;
+    user.updateUser({ email, name, userId });
+  })
+
+  export let data;
   let issueTitle: string;
   let issueSections: Array<IssueSectionType> = [];
   let issueSectionalOptions: Array<IssueSectionalOptionType> = [];
