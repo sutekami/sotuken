@@ -26,6 +26,7 @@ const io = new Server(server, {
 const sessionMiddleware = expressSession({
   secret: 's3Cur3',
   name: '_session_id',
+  resave: true,
   saveUninitialized: true,
   store,
   cookie: {

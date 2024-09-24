@@ -60,7 +60,10 @@ export function webSocketRouter(socket: Socket, io: Server) {
     const value: roomType = JSON.parse(await redis.get(BASE_ROOM_ID_KEY + roomId) || '{}');
     value.participantVotedCount = (value.participantVotedCount || 0) + 1;
     const obj = (value.voteStatus || {});
-    obj[sessionId] = parseInt(issueSectionalOptionId);
+    // ちょっとやりたいことできてない一旦ここは隠す
+    // obj[sessionId] = parseInt(issueSectionalOptionId);
+    // value.voteStatus = obj;
+    obj[issueSectionalOptionId] = (obj[issueSectionalOptionId] || 0) + 1;
     value.voteStatus = obj;
 
 

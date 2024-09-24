@@ -1,4 +1,16 @@
 <!-- meta data! -->
+<script lang="ts">
+  import Client from "$lib/client";
+  import { onMount } from "svelte";
+
+  onMount(async () => {
+    await new Client(Client.CLIENT, {
+      url: '/api',
+      method: "GET",
+      body: null,
+    }).fetch()
+  });
+</script>
 <svelte:head>
   <title>Vote App</title>
 </svelte:head>
