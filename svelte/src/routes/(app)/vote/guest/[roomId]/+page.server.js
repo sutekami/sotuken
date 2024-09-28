@@ -5,7 +5,6 @@ export async function load({ params, cookies }) {
   const fetchCheckRoomId = await checkRoomId({ params, cookies });
   if (!fetchCheckRoomId.ok) error(fetchCheckRoomId.status, "存在しない部屋です");
 
-  // const item = await (await getUserName({ params, cookies })).json();
   const item = await (await getUserName({ params, cookies })).json();
 
   return {
