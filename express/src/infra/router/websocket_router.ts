@@ -60,22 +60,20 @@ export function webSocketRouter(socket: Socket, io: Server) {
     const value: roomType = JSON.parse(await redis.get(BASE_ROOM_ID_KEY + roomId) || '{}');
     value.participantVotedCount = (value.participantVotedCount || 0) + 1;
     const obj = (value.voteStatus || {});
-    // ちょっとやりたいことできてない一旦ここは隠す
-    // obj[sessionId] = parseInt(issueSectionalOptionId);
-    // value.voteStatus = obj;
-    obj[issueSectionalOptionId] = (obj[issueSectionalOptionId] || 0) + 1;
+    obj[issueSectionalOptionId] = [ ...(obj[issueSectionalOptionId] || []), sessionId ];
     value.voteStatus = obj;
 
-
-    const voteStatusParams: { [sessionId: string]: { guestUserName: string, optinoId: number } } = {};
+    const voteStatusParams: { [sessionId: string]: { guestUserName: string, optionId: number } } = {};
     // TODO: ここで、ユーザーnameごとに投票したデータを親に渡したい
-    for (let [sId, optionId] of Object.entries(value.voteStatus)) {
-      voteStatusParams[sId] = {
-        guestUserName: (value.guestUsers || {})[sId]?.userName,
-        optinoId: optionId,
-      };
+    for (let [optionId, sessionIds] of Object.entries(value.voteStatus)) {
+      sessionIds.forEach(id => {
+        voteStatusParams[id] = {
+          guestUserName: (value.guestUsers || {})[id]?.userName,
+          optionId: parseInt(optionId),
+        }
+      });
     };
-    socket.emit('voteStatus', value.voteStatus);
+    socket.to(roomId).emit('voteStatus', voteStatusParams);
 
     // NOTE: 全員の投票が終わってなければ待ってもらうイベントを発火
     if (value.participantCount !== value.participantVotedCount) {

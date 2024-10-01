@@ -80,7 +80,7 @@
       {/each}
       {#if voteResult}
         {#each $issueSection.issueSectionalOptions || [] as option}
-          <p>{option.body}: {voteResult[option.issueSectionalOptionId || ''] || 0}</p>
+          <p>{option.body}: {(voteResult[option.issueSectionalOptionId] || []).length || 0}</p>
         {/each}
       {:else if isWaitVoteComplate}
         <p>全員の投票が終わるまでお待ちください…</p>

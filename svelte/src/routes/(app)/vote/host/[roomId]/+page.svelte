@@ -8,6 +8,7 @@
   let selectedIssueId: number;
   let inProgress: boolean = false;
   let isResult: boolean = false;
+  let voteStatus: any;
 
   const socket = io('ws://localhost:3000')
 
@@ -32,11 +33,12 @@
   });
 
   socket.on('voteStatus', arg => {
-    console.log(arg);
+    console.log(Object.values(arg));
+    voteStatus = Object.values(arg);
   });
 
   async function copy() {
-    const writeText = `localhost:5000/vote/guest/${data.roomId}`;
+    const writeText = `localhost:8080/vote/guest/${data.roomId}`;
     navigator.clipboard.writeText(writeText);
   }
 
@@ -75,6 +77,9 @@
     <div>
       <button on:click={handleNextVote}>next vote</button>
     </div>
+    {#each voteStatus as status}
+      <p>{status.guestUserName}: {status.optionId}</p>
+    {/each}
   {/if}
 {:else}
   <Menu

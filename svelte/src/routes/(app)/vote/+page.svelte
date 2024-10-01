@@ -11,8 +11,9 @@
   })
 
   async function createRoom() {
-    const res = await api.vote.createRoom();
-    goto(`vote/host/${res.data.roomId}`);
+    const res = await fetch('/api/vote');
+    const roomId = (await res.json()).roomId
+    goto(`vote/host/${roomId}`);
   }
 </script>
 

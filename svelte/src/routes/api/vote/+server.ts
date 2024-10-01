@@ -1,11 +1,13 @@
 // お試しにfetchで行っているので、もしかしたら他にもheaderを入れる必要あるかもしれない
 
-export async function GET({ request }) {
-  const req = new Request('http://express:3000/session');
-  return await fetch(req, {
-    credentials: "include",
+import { headers } from '$lib/client';
+
+export async function GET({ fetch, cookies }) {
+  const req = new Request('http://express:3000/vote', {
+    headers: headers(cookies.get("_session_id")),
     method: "GET",
-  })
+  });
+  return await fetch(req);
 }
 
 export async function POST({ request }) {
