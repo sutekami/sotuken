@@ -1,3 +1,4 @@
+import { Issue, IssueSection } from '@prisma/client';
 import RedisStore from 'connect-redis';
 import Redis from "ioredis";
 
@@ -25,18 +26,19 @@ const REDIS_EXPIRE_SECOND = 3600;
  */
 
 type roomType = {
-  inProgress: boolean,             //
-  issueId?: number,                //
-  issueSectionIds?: Array<number>, //
-  currentIssueSectionId?: number,  //
-  participantCount?: number,       // ゲスト参加者の人数
-  participantVotedCount?: number,  // その問題を投票した人数、設問ごとにリセット
-  // ここに、issueSectionalOptionのidと、そこにゲストユーザーのsocketを入れる
-  voteStatus?: {[issueSectionalOptionId: string]: Array<string>},
-  hostUser?: { sessionId: string },
-  guestUsers?: {
-    [sessionId: string]: { userName: string },
-  },
+  roomId?: string;
+  guestUsers?: Record<string, string>[];
+  // hostUsers: Record<string, string>[];
+  // ゆくゆくはhostUsersにも名前が入るようにしたい
+  hostUsers?: string[];
+  inVoting?: boolean;
+  inResult?: boolean;
+  voteStatus?: Record<number, string[]>;
+  timeSecLimit?: number;
+  issues?: Issue[];
+  currentIssueId?: number;
+  currentIssueSectionId?: number;
+  currentIssueSectionalOptionId?: number;
 }
 
 export { redis, store, roomType, BASE_ROOM_ID_KEY, REDIS_EXPIRE_SECOND }
