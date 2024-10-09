@@ -1,27 +1,52 @@
-<script context="module" lang="ts">
-
-</script>
-
 <script lang="ts">
   import { io } from "socket.io-client";
   import { onMount } from "svelte";
+  import Menu from './Menu.svelte';
+  import { issues } from "$lib/store/issue.ts";
 
   const socket = io('ws://localhost:3000')
 
   export let data;
+  let inVoting: boolean;
+  let inResult: boolean;
+
   const { roomId, sessionId, user } = data;
 
   onMount(async () => {
-    socket.emit('host:connect', roomId, sessionId)
+    socket.emit('host:connect', roomId, sessionId, user.userId);
   });
 
   socket.on('host:receive_value', v => {
     console.log(v);
+    inVoting = v.inVoting ?? inVoting;
+    inResult = v.inResult ?? inResult;
+    issues.updateIssues(v.issues);
   })
 </script>
 
+<div class="vote-host-page">
+  {#if inVoting}
 
+  {:else if inResult}
+  {:else}
+  <div class="home">
+    <Menu
+      roomId={roomId}
+    />
+  </div>
+  {/if}
+</div>
 
+<style lang="scss">
+.vote-host-page {
+  & {
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+</style>
 
 
 

@@ -48,6 +48,13 @@ export const Req = {
         }),
     },
   },
+  signup: {
+    POST: (params: string) =>
+      new Request(joinUrl(BASE_URL, "signup"), {
+        method: "POST",
+        body: params,
+      }),
+  },
 
   api: {
     root: () =>

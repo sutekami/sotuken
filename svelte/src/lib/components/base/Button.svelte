@@ -6,8 +6,9 @@
   // initialize
 
   // props
-  export let value: string = "";
+  export let label: string = "";
   export let disabled: boolean = false;
+  export let hoverColor: string = "";
   // props
 
   function handleClickDispatch() {
@@ -16,9 +17,9 @@
 </script>
 
 <input
-  class="base-button {disabled ? 'disabled' : 'active'}"
+  class="base-button {disabled ? 'disabled' : "active" + hoverColor}"
   type="button"
-  bind:value
+  bind:value={label}
   on:click={handleClickDispatch}
 >
 
@@ -38,9 +39,47 @@
       cursor: not-allowed;
     }
     &.active {
-      &:hover {
-        background-color: #98FB98;
-        color: #333;
+      & {
+        &:hover {
+          background-color: #98FB98;
+          color: #333;
+        }
+      }
+      &_blue {
+        &:hover {
+          background-color: aqua;
+          color: #333;
+        }
+      }
+      &_red {
+        &:hover {
+          background-color: #e57373;
+          color: #333;
+        }
+      }
+      &_orange {
+        &:hover {
+          background-color: #ffb74d;
+          color: #333;
+        }
+      }
+      &_yellow {
+        &:hover {
+          background-color: #fff176;
+          color: #333;
+        }
+      }
+      &_indigo {
+        &:hover {
+          background-color: #7986cb;
+          color: #333;
+        }
+      }
+      &_purple {
+        &:hover {
+          background-color: #ba68c8;
+          color: #333;
+        }
       }
       &:active {
         background-color: #ddd;

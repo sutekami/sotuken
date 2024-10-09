@@ -83,17 +83,27 @@ function emitError(socket: Socket, type?: string, msg?: string) {
 }
 
 export function webSocketRouter(socket: Socket, io: Server) {
-  socket.on("host:connect", async (roomId: string, sessionId: string) => {
-    let value = await getRoomValue({ roomId });
+  socket.on(
+    "host:connect",
+    async (roomId: string, sessionId: string, userId: string) => {
+      let value = await getRoomValue({ roomId });
 
-    if (!value.hostUsers?.includes(sessionId)) {
-      const hostUsers = [...(value.hostUsers || []), sessionId];
-      value = setValue(value, { hostUsers });
+      // NOTE: 初回時のみredisに情報をセットする
+      if (!value.hostUsers?.includes(sessionId)) {
+        const hostUsers = [...(value.hostUsers || []), sessionId];
+        value = setValue(value, { hostUsers });
+      }
+
+      // NOTE: Issuesをfetch
+      const issues = await bundle.IssueRepository.where({
+        userId: parseInt(userId),
+      });
+      value = setValue(value, { issues });
+
       setRoomValue({ roomId, value });
-    }
-
-    emitAllUser({ roomId, socket, value });
-  });
+      emitAllUser({ roomId, socket, value });
+    },
+  );
 
   socket.on(
     "guest:connect",
