@@ -4,6 +4,7 @@
 
   let displaySeconds = 5;
 
+
   onMount(async () => setTimeredirectPage());
 
   async function setTimeredirectPage() {

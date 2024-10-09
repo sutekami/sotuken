@@ -1,16 +1,71 @@
+<script context="module" lang="ts">
+
+</script>
+
 <script lang="ts">
   import { io } from "socket.io-client";
   import { onMount } from "svelte";
+
+  const socket = io('ws://localhost:3000')
+
+  export let data;
+  const { roomId, sessionId, user } = data;
+
+  onMount(async () => {
+    socket.emit('host:connect', roomId, sessionId)
+  });
+
+  socket.on('host:receive_value', v => {
+    console.log(v);
+  })
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <script lang="ts">
+  import { onMount } from "svelte";
   import { issues } from "$lib/store/issue";
+  import { issueSection } from "$lib/store/issue_section";
   import Menu from "./Menu.svelte";
 
   export let data;
   let selectedIssueId: number;
   let inProgress: boolean = false;
   let isResult: boolean = false;
-  let voteStatus: any;
+  let voteStatus: any[] = [];
 
-  const socket = io('ws://localhost:3000')
 
   onMount(async () => {
     issues.updateIssues(data.issues);
@@ -33,12 +88,15 @@
   });
 
   socket.on('voteStatus', arg => {
-    console.log(Object.values(arg));
     voteStatus = Object.values(arg);
   });
 
+  socket.on('sendIssueSection', arg => {
+    issueSection.updateIssueSection(arg);
+  });
+
   async function copy() {
-    const writeText = `localhost:8080/vote/guest/${data.roomId}`;
+    const writeText = `localhost:5000/vote/guest/${data.roomId}`;
     navigator.clipboard.writeText(writeText);
   }
 
@@ -78,7 +136,7 @@
       <button on:click={handleNextVote}>next vote</button>
     </div>
     {#each voteStatus as status}
-      <p>{status.guestUserName}: {status.optionId}</p>
+      <p>{status.guestUserName}: {$issueSection.issueSectionalOptions?.find(v => v.issueSectionalOptionId === status.optionId)?.body}</p>
     {/each}
   {/if}
 {:else}
@@ -91,4 +149,4 @@
   />
 {/if}
 
-
+ -->

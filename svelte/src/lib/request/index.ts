@@ -31,6 +31,23 @@ export const Req = {
       method: "GET",
       headers: headers(sessionId),
     }),
+  vote: {
+    GET: (sessionId?: string) =>
+      new Request(joinUrl(BASE_URL, "vote"), {
+        ...BASE_INIT,
+        method: "GET",
+        headers: headers(sessionId),
+      }),
+    roomSession: {
+      POST: (params: string, sessionId?: string) =>
+        new Request(joinUrl(BASE_URL, "vote", "room-session"), {
+          ...BASE_INIT,
+          method: "POST",
+          headers: headers(sessionId),
+          body: params,
+        }),
+    },
+  },
 
   api: {
     root: () =>
@@ -38,5 +55,20 @@ export const Req = {
         ...BASE_INIT,
         method: "GET",
       }),
+    vote: {
+      GET: () =>
+        new Request(joinUrl(BASE_API_URL, "vote"), {
+          ...BASE_INIT,
+          method: "GET",
+        }),
+      roomSession: {
+        POST: (params: string) =>
+          new Request(joinUrl(BASE_API_URL, "vote", "room-session"), {
+            ...BASE_INIT,
+            method: "POST",
+            body: params,
+          }),
+      },
+    },
   },
 };

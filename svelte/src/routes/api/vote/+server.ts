@@ -1,24 +1,6 @@
-// お試しにfetchで行っているので、もしかしたら他にもheaderを入れる必要あるかもしれない
-
-import { headers } from '$lib/client';
+import { COOKIE_SESSION_ID, Req } from "$lib/request/index";
 
 export async function GET({ fetch, cookies }) {
-  const req = new Request('http://express:3000/vote', {
-    headers: headers(cookies.get("_session_id")),
-    method: "GET",
-  });
+  const req = Req.vote.GET(cookies.get(COOKIE_SESSION_ID));
   return await fetch(req);
-}
-
-export async function POST({ request }) {
-  const params = await request.json();
-  const req = new Request('http://express:3000/signin');
-  return await fetch(req, {
-    body: JSON.stringify(params),
-    credentials: "include",
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
 }
