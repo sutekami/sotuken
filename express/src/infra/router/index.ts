@@ -16,7 +16,7 @@ router.use((req, res, next) => {
 });
 
 router.route("/").get((req, res) => {
-  res.status(200).send();
+  res.status(204).send();
 });
 
 router.route("/session").get(async (req, res, next) => {
@@ -80,12 +80,15 @@ router.route("/vote/:roomId").get(async (req, res) => {
 router.route("/vote/room-session").post(async (req, res) => {
   const { sessionId, roomId } = req.body;
   const redisKey = BASE_ROOM_ID_KEY + roomId;
-  const value = await redis.get(redisKey);
-  console.log(value);
-  // TODO: ここで、guestUsersの中に送られてきたsessionIdがあるかどうか確かめる
-  // TODO: あれば名前を返す
-  // TODO: なければ何も返さない
-  res.status(200).json();
+  const value: roomType = JSON.parse(await redis.get(redisKey) || "{}");
+  const guestUser = value.guestUsers?.find(e => e.hash === sessionId);
+  if (!!guestUser) {
+    res.status(200).json({
+      item: guestUser,
+    });
+  } else {
+    res.status(403).json();
+  }
 });
 
 router.route("/vote/:roomId/guest").get(async (req, res) => {

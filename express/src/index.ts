@@ -16,10 +16,10 @@ declare module "express-session" {
 
 const app = express();
 const server = createServer(app);
-const port = 3000;
+const port = process.env.SERVER_PORT;
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5000",
+    origin: `http://localhost:${process.env.CLIENT_PORT}`,
   },
   cookie: {
     name: "_socket_session_id",
@@ -43,7 +43,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:5000");
+  res.header("Access-Control-Allow-Origin", `http://localhost:${process.env.CLIENT_PORT}`);
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
   res.header(
     "Access-Control-Allow-Headers",

@@ -3,3 +3,4 @@ express/node_modules
 express/.env
 radis
 *.rdb
+.env

@@ -1,10 +1,11 @@
 <script lang="ts">
   import { io } from "socket.io-client";
   import { onMount } from "svelte";
-  import Menu from './Menu.svelte';
   import { issues } from "$lib/store/issue.ts";
+  import { page } from "$app/stores";
+  import Menu from './Menu.svelte';
 
-  const socket = io('ws://localhost:3000')
+  const socket = io(`ws://localhost:${$page.data.env.SERVER_PORT}`)
 
   export let data;
   let inVoting: boolean;
@@ -22,6 +23,11 @@
     inResult = v.inResult ?? inResult;
     issues.updateIssues(v.issues);
   })
+
+  async function copy() {
+    const writeText = `localhost:${$page.data.env.CLIENT_PORT}/vote/guest/${data.roomId}`;
+    navigator.clipboard.writeText(writeText);
+  }
 </script>
 
 <div class="vote-host-page">
@@ -32,6 +38,7 @@
   <div class="home">
     <Menu
       roomId={roomId}
+      on:copy={copy}
     />
   </div>
   {/if}
@@ -119,11 +126,6 @@
   socket.on('sendIssueSection', arg => {
     issueSection.updateIssueSection(arg);
   });
-
-  async function copy() {
-    const writeText = `localhost:5000/vote/guest/${data.roomId}`;
-    navigator.clipboard.writeText(writeText);
-  }
 
   function selectIssue(event: CustomEvent<any>) {
     selectedIssueId = event.detail.currentTarget.value;

@@ -3,19 +3,58 @@
   import { Req } from "$lib/request";
   import { page } from "$app/stores";
   import { io } from "socket.io-client";
+  import { BaseInput } from "$lib/components";
 
   const socket = io('ws://localhost:3000')
+
+  let guestName: string = "";
 
   onMount(async () => {
     const params = JSON.stringify({
       roomId: $page.params.roomId,
     });
     const req = Req.api.vote.roomSession.POST(params);
-    // TODO: ここでもし名前が返ってきたら、sessionがあるので、それ以降websocketで通信し、
-    // TODO: 現在の投票情報を取ってくる
-    const res = await fetch(req);
+    await fetch(req)
+      .then(data => {
+        // TODO: ここに名前が返ってくるので、それらをstore？保存
+        // TODO: その後guest:connectを行う
+      })
+      .catch(err => {
+        // TODO: ここに初めてきたユーザー処理になるため、名前を入力するよう促す
+        // TODO: 名前を入力すると同時にguest:connectを行う
+      });
   })
-  // import { BaseInput, BaseButton } from "$lib/components/index.js";
+
+</script>
+
+<div class="vote-guest-page">
+  <div class="input">
+    <BaseInput
+      placeholder="名前を入力してください"
+      bind:value={guestName}
+    />
+  </div>
+</div>
+
+<style lang="scss">
+.vote-guest-page {
+  & {
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .input {
+    & {
+      max-width: 1100px;
+    }
+  }
+}
+</style>
+
+
+  <!-- // import { BaseInput, BaseButton } from "$lib/components/index.js";
   // import { issueSection } from "$lib/store/issue_section";
   // import { onMount } from "svelte";
 
@@ -74,8 +113,7 @@
 
   // function debug() {
   //   socket.emit('debug', data.roomId);
-  // };
-</script>
+  // }; -->
 <!--
 <button on:click={debug}>debug</button>
 <div class="vote-guest-page">

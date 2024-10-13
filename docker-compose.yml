@@ -10,6 +10,8 @@ services:
       - mysql
       - redis
     command: yarn run dev
+    env_file:
+      - ./.env
   svelte:
     build: ./svelte
     volumes:
@@ -22,6 +24,8 @@ services:
       - redis
       - express
     command: npm run dev -- --force
+    env_file:
+      - ./.env
   mysql:
     build: ./mysql
     ports:
