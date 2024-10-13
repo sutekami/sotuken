@@ -1,10 +1,6 @@
-import { headers } from '$lib/client/index.js';
+import { COOKIE_SESSION_ID, Req } from "$lib/request/index.js";
 
 export async function GET({ fetch, cookies }) {
-  const req = new Request('http://express:3000', {
-    headers: headers(cookies.get("_session_id")),
-    method: "GET",
-  })
-
+  const req = Req.root(cookies.get(COOKIE_SESSION_ID));
   return await fetch(req);
 }

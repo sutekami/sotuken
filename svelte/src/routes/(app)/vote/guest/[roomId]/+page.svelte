@@ -1,70 +1,86 @@
-<script>
-  import { io } from "socket.io-client";
-  import { BaseInput, BaseButton } from "$lib/components/index.js";
-  import { issueSection } from "$lib/store/issue_section";
+<script lang='ts'>
   import { onMount } from "svelte";
-
-  export let data;
-  let inVoteRoom = false;
-  let inProgress = false;
-  let isWaitVoteComplate = false;
-  let selectedIssueSectionalOptionId;
-  let voteResult;
-  let guestUserName = '';
+  import { Req } from "$lib/request";
+  import { page } from "$app/stores";
+  import { io } from "socket.io-client";
 
   const socket = io('ws://localhost:3000')
 
-  onMount(() => {
-    if (data.guestUserName) {
-      inVoteRoom = true;
-      guestUserName = data.guestUserName;
-      socket.emit('guestJoinVoteRoom', data.roomId, data.sessionId, guestUserName);
-    };
+  onMount(async () => {
+    const params = JSON.stringify({
+      roomId: $page.params.roomId,
+    });
+    const req = Req.api.vote.roomSession.POST(params);
+    // TODO: ここでもし名前が返ってきたら、sessionがあるので、それ以降websocketで通信し、
+    // TODO: 現在の投票情報を取ってくる
+    const res = await fetch(req);
   })
+  // import { BaseInput, BaseButton } from "$lib/components/index.js";
+  // import { issueSection } from "$lib/store/issue_section";
+  // import { onMount } from "svelte";
 
-  socket.on('successedGuestJoinVoteRoom', () => {
-    inVoteRoom = true;
-  });
+  // export let data;
+  // let inVoteRoom = false;
+  // let inProgress = false;
+  // let isWaitVoteComplate = false;
+  // let selectedIssueSectionalOptionId;
+  // let voteResult;
+  // let guestUserName = '';
 
-  socket.on('voteStarted', arg => { inProgress = arg.inProgress })
 
-  socket.on('sendIssueSection', arg => {
-    isWaitVoteComplate = false;
-    selectedIssueSectionalOptionId = null;
-    voteResult = null;
-    issueSection.updateIssueSection(arg)
-  })
+  // onMount(() => {
+  //   if (data.guestUserName) {
+  //     inVoteRoom = true;
+  //     guestUserName = data.guestUserName;
+  //     socket.emit('guestJoinVoteRoom', data.roomId, data.sessionId, guestUserName);
+  //   };
+  // })
 
-  socket.on('voteFinished', arg => {
-    inProgress = arg.inProgress;
-  })
+  // socket.on('successedGuestJoinVoteRoom', () => {
+  //   inVoteRoom = true;
+  // });
 
-  socket.on('waitVoteComplate', () => {
-    isWaitVoteComplate = true;
-  });
+  // socket.on('voteStarted', arg => { inProgress = arg.inProgress })
 
-  socket.on('voteResult', arg => {
-    voteResult = arg.voteStatus;
-  });
+  // socket.on('sendIssueSection', arg => {
+  //   isWaitVoteComplate = false;
+  //   selectedIssueSectionalOptionId = null;
+  //   voteResult = null;
+  //   issueSection.updateIssueSection(arg)
+  // })
 
-  function vote() {
-    if (!selectedIssueSectionalOptionId) return alert('投票する設問を選択してください');
-    socket.emit('vote', data.roomId, data.sessionId, selectedIssueSectionalOptionId);
-  }
+  // socket.on('voteFinished', arg => {
+  //   inProgress = arg.inProgress;
+  // })
 
-  function handleClickEnterVoteRoom() {
-    socket.emit('guestJoinVoteRoom', data.roomId, data.sessionId, guestUserName);
-    inProgress = data.voteStatus.inProgress;
-    if (inProgress) socket.emit('fetchIssueSection', data.roomId);
-  }
+  // socket.on('waitVoteComplate', () => {
+  //   isWaitVoteComplate = true;
+  // });
 
-  function debug() {
-    socket.emit('debug', data.roomId);
-  };
+  // socket.on('voteResult', arg => {
+  //   voteResult = arg.voteStatus;
+  // });
+
+  // function vote() {
+  //   if (!selectedIssueSectionalOptionId) return alert('投票する設問を選択してください');
+  //   socket.emit('vote', data.roomId, data.sessionId, selectedIssueSectionalOptionId);
+  // }
+
+  // function handleClickEnterVoteRoom() {
+  //   socket.emit('guestJoinVoteRoom', data.roomId, data.sessionId, guestUserName);
+  //   inProgress = data.voteStatus.inProgress;
+  //   if (inProgress) socket.emit('fetchIssueSection', data.roomId);
+  // }
+
+  // function debug() {
+  //   socket.emit('debug', data.roomId);
+  // };
 </script>
+<!--
 <button on:click={debug}>debug</button>
 <div class="vote-guest-page">
   {#if inVoteRoom}
+    <p>ユーザー名: {guestUserName}</p>
     {#if inProgress}
       <p>{$issueSection.title}</p>
       {#each $issueSection.issueSectionalOptions || [] as option}
@@ -87,7 +103,6 @@
       {:else}
         <input type="button" value="投票する" on:click={vote}>
       {/if}
-    <!-- 投票前ゲストユーザー画面 -->
     {:else}
       <p>home画面</p>
     {/if}
@@ -139,3 +154,4 @@
   }
 }
 </style>
+-->

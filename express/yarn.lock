@@ -764,6 +764,7 @@ __metadata:
     express-async-errors: "npm:^3.1.1"
     express-session: "npm:^1.18.0"
     ioredis: "npm:^5.4.1"
+    js-sha256: "npm:^0.11.0"
     nodemon: "npm:^3.1.0"
     path: "npm:^0.12.7"
     postcss: "npm:^8.4.41"
@@ -2162,6 +2163,13 @@ __metadata:
     merge-stream: "npm:^2.0.0"
     supports-color: "npm:^8.0.0"
   checksum: 10c0/8c4737ffd03887b3c6768e4cc3ca0269c0336c1e4b1b120943958ddb035ed2a0fc6acab6dc99631720a3720af4e708ff84fb45382ad1e83c27946adf3623969b
+  languageName: node
+  linkType: hard
+
+"js-sha256@npm:^0.11.0":
+  version: 0.11.0
+  resolution: "js-sha256@npm:0.11.0"
+  checksum: 10c0/90980fe01ca01fbd166751fb16c4caa09c1ab997e8bf77c0764cc05c772c6044946f4c1b3bad266ce78357280d2131d3dc0cf2dd7646e78272996bd4d590aa4f
   languageName: node
   linkType: hard
 
