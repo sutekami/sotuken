@@ -1,27 +1,22 @@
 <script lang='ts'>
   import { onMount } from "svelte";
-  import { Req } from "$lib/request";
   import { page } from "$app/stores";
   import { io } from "socket.io-client";
   import { BaseButton, BaseInput } from "$lib/components";
   import { randomGuestNames } from "./randomGuestNames";
 
   const socket = io('ws://localhost:3000')
-  const sessionId = $page.data.sessionId;
 
+  socket.on('guest:receive_value', v => {
+    console.log(v);
+  });
+
+  const sessionId = $page.data.sessionId;
   let isSetup: boolean = true;
   let guestName = randomGuestNames[Math.floor(Math.random() * randomGuestNames.length)];
 
   onMount(async () => {
-    // const params = JSON.stringify({
-    //   roomId: $page.params.roomId,
-    // });
-    // const req = Req.api.vote.roomSession.POST(params);
-    // await fetch(req)
-    //   .then(data => {
-    //     // TODO: ここに名前が返ってくるので、それらをstore？保存
-    //     // TODO: その後guest:connectを行う
-    //   });
+    socket.emit('guest:connect', $page.params.roomId, $page.data.sessionId);
   })
 
   const handleClickEmitGuestConnect = () => {

@@ -72,20 +72,6 @@ router.route('/vote/:roomId').get(async (req, res) => {
   else res.status(403).json();
 });
 
-router.route('/vote/room-session').post(async (req, res) => {
-  const { sessionId, roomId } = req.body;
-  const redisKey = BASE_ROOM_ID_KEY + roomId;
-  const value: roomType = JSON.parse((await redis.get(redisKey)) || '{}');
-  const guestUser = value.guestUsers?.find(e => e.hash === sessionId);
-  if (!!guestUser) {
-    res.status(200).json({
-      item: guestUser,
-    });
-  } else {
-    res.status(403).json();
-  }
-});
-
 router.route('/vote/:roomId/guest').get(async (req, res) => {
   const redisKey = BASE_ROOM_ID_KEY + req.params.roomId;
   const value: roomType = JSON.parse((await redis.get(redisKey)) || '{}');
