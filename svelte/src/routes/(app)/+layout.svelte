@@ -1,3 +1,17 @@
+<script lang="ts">
+  import { user } from "$lib/store/user";
+  import { onMount } from "svelte";
+
+  export let data;
+
+  onMount(() => {
+    if (!!data.user) {
+      const { email, name, userId } = data.user;
+      user.updateUser({ email, name, userId });
+    }
+  })
+</script>
+
 <!-- meta data! -->
 <svelte:head>
   <title>Vote App</title>

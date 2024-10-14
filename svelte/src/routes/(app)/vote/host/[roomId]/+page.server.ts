@@ -1,15 +1,7 @@
-import { COOKIE_SESSION_ID, Req } from "$lib/request/index.ts";
-import { error } from "@sveltejs/kit";
+import { COOKIE_SESSION_ID } from '$lib/request/index.ts';
 
 export async function load({ fetch, cookies, params }) {
-  let user;
-  const req = Req.session(cookies.get(COOKIE_SESSION_ID));
-  const res = await fetch(req);
-  if (!res.ok) error(res.status, "ログインしてください");
-  else user = await res.json();
-
   return {
-    user,
     roomId: params.roomId,
     sessionId: cookies.get(COOKIE_SESSION_ID),
   };

@@ -1,30 +1,13 @@
-import { Socket, Server } from "socket.io";
-import * as bundle from "infra/router/bundle";
-import {
-  redis,
-  roomType,
-  BASE_ROOM_ID_KEY,
-  REDIS_EXPIRE_SECOND,
-  ErrorType,
-} from "infra/redis";
+import { Socket, Server } from 'socket.io';
+import * as bundle from 'infra/router/bundle';
+import { redis, roomType, BASE_ROOM_ID_KEY, REDIS_EXPIRE_SECOND, ErrorType } from 'infra/redis';
 
 async function getRoomValue({ roomId }: { roomId: string }): Promise<roomType> {
-  return JSON.parse((await redis.get(BASE_ROOM_ID_KEY + roomId)) || "{}");
+  return JSON.parse((await redis.get(BASE_ROOM_ID_KEY + roomId)) || '{}');
 }
 
-async function setRoomValue({
-  roomId,
-  value,
-}: {
-  roomId: string;
-  value: roomType;
-}) {
-  await redis.set(
-    BASE_ROOM_ID_KEY + roomId,
-    JSON.stringify(value),
-    "EX",
-    REDIS_EXPIRE_SECOND,
-  );
+async function setRoomValue({ roomId, value }: { roomId: string; value: roomType }) {
+  await redis.set(BASE_ROOM_ID_KEY + roomId, JSON.stringify(value), 'EX', REDIS_EXPIRE_SECOND);
 }
 
 function setValue(
@@ -58,77 +41,60 @@ function setValue(
   };
 }
 
-function emitAllUser({
-  socket,
-  value,
-  roomId,
-}: {
-  socket: Socket;
-  value: roomType;
-  roomId: string;
-}) {
-  socket.emit("host:receive_value", value);
-  socket.emit("guest:receive_value", value);
-  socket.to(roomId).emit("host:receive_value", value);
-  socket.to(roomId).emit("guest:receive_value", value);
+function emitAllUser({ socket, value, roomId }: { socket: Socket; value: roomType; roomId: string }) {
+  socket.emit('host:receive_value', value);
+  socket.emit('guest:receive_value', value);
+  socket.to(roomId).emit('host:receive_value', value);
+  socket.to(roomId).emit('guest:receive_value', value);
 }
 
 function emitError(socket: Socket, type?: string, msg?: string) {
   switch (type) {
     case ErrorType.RoomNotExists.value:
-      return socket.emit("error", "ルームが存在しません");
+      return socket.emit('error', 'ルームが存在しません');
     default:
-      return socket.emit("error", msg ?? "エラーが発生しました");
+      return socket.emit('error', msg ?? 'エラーが発生しました');
   }
 }
 
 export function webSocketRouter(socket: Socket, io: Server) {
-  socket.on(
-    "host:connect",
-    async (roomId: string, sessionId: string, userId: string) => {
-      let value = await getRoomValue({ roomId });
+  socket.on('host:connect', async (roomId: string, sessionId: string, userId: string) => {
+    let value = await getRoomValue({ roomId });
 
-      // NOTE: 初回時のみredisに情報をセットする
-      if (!value.hostUsers?.includes(sessionId)) {
-        const hostUsers = [...(value.hostUsers || []), sessionId];
-        value = setValue(value, { hostUsers });
-      }
+    // NOTE: 初回時のみredisに情報をセットする
+    if (!value.hostUsers?.includes(sessionId)) {
+      const hostUsers = [...(value.hostUsers || []), sessionId];
+      value = setValue(value, { hostUsers });
+    }
 
-      // NOTE: Issuesをfetch
-      const issues = await bundle.IssueRepository.where({
-        userId: parseInt(userId),
-      });
-      value = setValue(value, { issues });
+    // NOTE: Issuesをfetch
+    const issues = await bundle.IssueRepository.where({
+      userId: parseInt(userId),
+    });
+    value = setValue(value, { issues });
 
+    setRoomValue({ roomId, value });
+    emitAllUser({ roomId, socket, value });
+  });
+
+  socket.on('guest:connect', async (roomId: string, sessionId: string, guestUserName?: string) => {
+    let value = await getRoomValue({ roomId });
+
+    if (!value.guestUsers?.find(e => e.hash === sessionId)) {
+      if (value.roomPassword) return socket.emit('guest:require_password');
+
+      const guestUsers = [...(value.guestUsers || []), { hash: sessionId, guestName: guestUserName ?? '' }];
+
+      value = setValue(value, { guestUsers });
       setRoomValue({ roomId, value });
-      emitAllUser({ roomId, socket, value });
-    },
-  );
+    }
 
-  socket.on(
-    "guest:connect",
-    async (roomId: string, sessionId: string, guestUserName?: string) => {
-      let value = await getRoomValue({ roomId });
+    emitAllUser({ roomId, socket, value });
+  });
 
-      if (!value.guestUsers?.find((e) => e.hash === sessionId)) {
-        if (value.roomPassword) return socket.emit("guest:require_password");
+  socket.on('host:update_setting', async () => {});
 
-        const guestUsers = [
-          ...(value.guestUsers || []),
-          { hash: sessionId, guestName: guestUserName ?? "" },
-        ];
-
-        value = setValue(value, { guestUsers });
-        setRoomValue({ roomId, value });
-      }
-
-      emitAllUser({ roomId, socket, value });
-    },
-  );
-
-  socket.on("host:update_setting", async () => {});
-
-  socket.on("host:start_vote", async () => {});
+  socket.on('host:start_vote', async () => {});
   // socket.on('hostJoinVoteRoom', async (roomId: string, sessionId: string) => {
   //   const value: roomType = await getRoomValue({ roomId });
   //   if (!value.hostUser?.sessionId) {

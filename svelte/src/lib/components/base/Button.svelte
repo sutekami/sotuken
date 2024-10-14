@@ -6,7 +6,6 @@
   // initialize
 
   // props
-  export let label: string = "";
   export let disabled: boolean = false;
   export let hoverColor: string = "";
   // props
@@ -16,12 +15,12 @@
   }
 </script>
 
-<input
+<button
   class="base-button {disabled ? 'disabled' : "active" + hoverColor}"
-  type="button"
-  bind:value={label}
   on:click={handleClickDispatch}
 >
+  <slot></slot>
+</button>
 
 <style lang="scss">
 .base-button {
@@ -31,7 +30,7 @@
     padding: 10px 18px;
     background-color: #f9f9f9;
     color: #555;
-    font-size: 16px;
+    font-size: 14px;
     box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: background-color 0.3s, border-color 0.3s, color 0.3s;

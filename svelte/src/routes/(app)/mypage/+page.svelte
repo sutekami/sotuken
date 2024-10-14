@@ -1,13 +1,5 @@
 <script>
   import { user } from "$lib/store/user";
-  import { onMount } from "svelte";
-
-  export let data;
-
-  onMount(() => {
-    const { email, name, userId } = data.user;
-    user.updateUser({ email, name, userId });
-  })
 </script>
 
 <h4>実際の投票画面のフローを考える</h4>

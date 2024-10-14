@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { user } from "$lib/store/user.js";
   import { io } from "socket.io-client";
   import { onMount } from "svelte";
   import { issues } from "$lib/store/issue.ts";
@@ -11,10 +12,10 @@
   let inVoting: boolean;
   let inResult: boolean;
 
-  const { roomId, sessionId, user } = data;
+  const { roomId, sessionId } = data;
 
   onMount(async () => {
-    socket.emit('host:connect', roomId, sessionId, user.userId);
+    socket.emit('host:connect', roomId, sessionId, $user.userId);
   });
 
   socket.on('host:receive_value', v => {

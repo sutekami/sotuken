@@ -3,37 +3,48 @@
   import { Req } from "$lib/request";
   import { page } from "$app/stores";
   import { io } from "socket.io-client";
-  import { BaseInput } from "$lib/components";
+  import { BaseButton, BaseInput } from "$lib/components";
+  import { randomGuestNames } from "./randomGuestNames";
 
   const socket = io('ws://localhost:3000')
+  const sessionId = $page.data.sessionId;
 
-  let guestName: string = "";
+  let isSetup: boolean = true;
+  let guestName = randomGuestNames[Math.floor(Math.random() * randomGuestNames.length)];
 
   onMount(async () => {
-    const params = JSON.stringify({
-      roomId: $page.params.roomId,
-    });
-    const req = Req.api.vote.roomSession.POST(params);
-    await fetch(req)
-      .then(data => {
-        // TODO: ここに名前が返ってくるので、それらをstore？保存
-        // TODO: その後guest:connectを行う
-      })
-      .catch(err => {
-        // TODO: ここに初めてきたユーザー処理になるため、名前を入力するよう促す
-        // TODO: 名前を入力すると同時にguest:connectを行う
-      });
+    // const params = JSON.stringify({
+    //   roomId: $page.params.roomId,
+    // });
+    // const req = Req.api.vote.roomSession.POST(params);
+    // await fetch(req)
+    //   .then(data => {
+    //     // TODO: ここに名前が返ってくるので、それらをstore？保存
+    //     // TODO: その後guest:connectを行う
+    //   });
   })
+
+  const handleClickEmitGuestConnect = () => {
+    if (!guestName) return alert("ゲスト名を入力してください");
+    socket.emit('guest:connect', $page.params.roomId, )
+  }
 
 </script>
 
 <div class="vote-guest-page">
-  <div class="input">
-    <BaseInput
-      placeholder="名前を入力してください"
-      bind:value={guestName}
-    />
-  </div>
+  {#if isSetup}
+    <div class="input-guest-name">
+      <BaseInput
+        placeholder="名前を入力してください"
+        bind:value={guestName}
+      />
+      <div class="input-guest-name-btn">
+        <BaseButton on:click={handleClickEmitGuestConnect}>入室する</BaseButton>
+      </div>
+    </div>
+  {:else}
+    <h2>this is a good position</h2>
+  {/if}
 </div>
 
 <style lang="scss">
@@ -48,6 +59,17 @@
   .input {
     & {
       max-width: 1100px;
+    }
+    &-guest-name {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+
+      &-btn {
+        width: auto;
+      }
     }
   }
 }

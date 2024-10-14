@@ -14,9 +14,15 @@
 </script>
 
 <div>
-  <BaseButton hoverColor="_blue" label="ゲストユーザーを招待する" on:click={() => dispatch('copy')} />
-  <BaseButton hoverColor="_purple" label="投票を始める" on:click={() => dispatch('start')} />
-  <BaseButton hoverColor="_indigo" label="デバッグ" on:click={() => dispatch('debug')} />
+  <BaseButton hoverColor="_blue" on:click={() => dispatch('copy')}>
+    ゲストユーザーを招待する
+  </BaseButton>
+  <BaseButton hoverColor="_purple" on:click={() => dispatch('start')}>
+    投票を始める
+  </BaseButton>
+  <BaseButton hoverColor="_indigo" on:click={() => dispatch('debug')}>
+    デバッグ用ボタン
+  </BaseButton>
 </div>
 
 {#each $issues || [] as issue}

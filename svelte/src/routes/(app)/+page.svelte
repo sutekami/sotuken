@@ -1,6 +1,3 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
-  onMount(() => {
-  })
+  // NOTE: 一旦rootのページにアクセスできるように仮で置いているファイル
 </script>

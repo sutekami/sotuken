@@ -1,12 +1,11 @@
 <script lang="ts">
+  import { user } from "$lib/store/user.js";
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
   import { Req } from "$lib/request/index.ts";
 
-  export let data;
-
   onMount(() => {
-    if (data.user) return;
+    if (!!$user) return;
     goto('/signin')
   })
 

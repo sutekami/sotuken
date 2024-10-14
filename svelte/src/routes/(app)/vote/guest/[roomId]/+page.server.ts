@@ -1,6 +1,10 @@
-import { COOKIE_SESSION_ID } from "$lib/request";
+import { COOKIE_SESSION_ID } from '$lib/request';
+import { redirect } from '@sveltejs/kit';
 
-export async function load({ params, cookies }) {}
+export async function load({ params, cookies }) {
+  const sessionId = cookies.get(COOKIE_SESSION_ID);
+  if (!sessionId) redirect(302, `/vote/guest?roomId=${params.roomId}`);
+}
 
 // import { error } from "@sveltejs/kit";
 
