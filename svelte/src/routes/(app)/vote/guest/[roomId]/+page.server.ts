@@ -7,10 +7,12 @@ export async function load({ fetch, params, cookies }) {
   const res = await fetch(req);
   const statusCode = res.status;
 
-  if (res.ok)
+  if (res.ok) {
+    cookies.set('room_id', params.roomId, { path: '/' });
     return {
       sessionId,
     };
+  }
 
   switch (statusCode) {
     case 400:

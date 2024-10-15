@@ -10,7 +10,7 @@ const REDIS_EXPIRE_SECOND = 3600;
 
 type roomType = {
   roomId?: string; // uuidのroom識別子
-  guestUsers?: { hash: string; guestName: string }[]; // sessionIdをKey、ゲスト名をValue
+  guestUsers?: { hash: string; guestName: string; isActive: boolean }[]; // sessionIdをKey、ゲスト名をValue
   hostUsers?: string[]; // hostとなるsessionIdの配列
   inVoting?: boolean; // 投票中かどうかのフラグ
   inResult?: boolean; // 結果表示中かどうかのフラグ

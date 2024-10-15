@@ -1,6 +1,7 @@
 import { Socket, Server } from 'socket.io';
 import * as bundle from 'infra/router/bundle';
 import { redis, roomType, BASE_ROOM_ID_KEY, REDIS_EXPIRE_SECOND, ErrorType } from 'infra/redis';
+import { parse } from 'cookie';
 
 async function getRoomValue({ roomId }: { roomId: string }): Promise<roomType> {
   return JSON.parse((await redis.get(BASE_ROOM_ID_KEY + roomId)) || '{}');
@@ -57,8 +58,15 @@ function emitError(socket: Socket, type?: string, msg?: string) {
   }
 }
 
+const parseCookie = (socket: Socket) => {
+  return parse(socket.handshake.headers.cookie || '');
+};
+
 export function webSocketRouter(socket: Socket, io: Server) {
-  socket.on('host:connect', async (roomId: string, sessionId: string, userId: string) => {
+  socket.on('host:connect', async (userId: string) => {
+    const roomId = parseCookie(socket)['room_id']!;
+    const sessionId = parseCookie(socket)['_session_id']!;
+    socket.join(roomId);
     let value = await getRoomValue({ roomId });
 
     // NOTE: 初回時のみredisに情報をセットする
@@ -77,17 +85,46 @@ export function webSocketRouter(socket: Socket, io: Server) {
     emitAllUser({ roomId, socket, value });
   });
 
-  socket.on('guest:connect', async (roomId: string) => {
+  socket.on('guest:connect', async () => {
+    const roomId = parseCookie(socket)['room_id']!;
+    const sessionId = parseCookie(socket)['_session_id']!;
+    socket.join(roomId);
     let value = await getRoomValue({ roomId });
 
     if (value.roomPassword) return socket.emit('guest:require_password');
+    const guestUsers = value.guestUsers?.map(obj => {
+      if (obj.hash === sessionId) return { hash: obj.hash, guestName: obj.guestName, isActive: true };
+      return obj;
+    });
+    value = setValue(value, { guestUsers });
+    setRoomValue({ roomId, value });
 
     emitAllUser({ roomId, socket, value });
   });
 
   socket.on('host:update_setting', async () => {});
 
-  socket.on('host:start_vote', async (roomId: string) => {});
+  socket.on('host:start_vote', async () => {
+    const roomId = parseCookie(socket)['room_id']!;
+    let value = await getRoomValue({ roomId });
+    emitAllUser({ roomId, socket, value });
+  });
+
+  socket.on('disconnect', async () => {
+    console.log('user disconnection');
+    const targetSessionId = parseCookie(socket)['_session_id']!;
+    const roomId = parseCookie(socket)['room_id']!;
+
+    let value = await getRoomValue({ roomId });
+    const guestUsers = value.guestUsers?.map(obj => {
+      if (obj.hash === targetSessionId) return { hash: obj.hash, guestName: obj.guestName, isActive: false };
+      return obj;
+    });
+    value = setValue(value, { guestUsers });
+    setRoomValue({ roomId, value });
+
+    emitAllUser({ roomId, socket, value });
+  });
   // socket.on('hostJoinVoteRoom', async (roomId: string, sessionId: string) => {
   //   const value: roomType = await getRoomValue({ roomId });
   //   if (!value.hostUser?.sessionId) {

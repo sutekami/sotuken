@@ -113,7 +113,7 @@ router
 
     const setValue: roomType = {
       roomId,
-      guestUsers: [...(guestUsers || []), { hash: sessionId, guestName }],
+      guestUsers: [...(guestUsers || []), { hash: sessionId, guestName, isActive: true }],
       hostUsers,
       inVoting,
       inResult,

@@ -3,7 +3,9 @@
   import { page } from '$app/stores';
   import { io } from 'socket.io-client';
 
-  const socket = io('ws://localhost:3000');
+  const socket = io(`ws://localhost:${$page.data.env.SERVER_PORT}`, {
+    withCredentials: true,
+  });
   let guestName: string;
   let inVoting: boolean;
   let inResult: boolean;
