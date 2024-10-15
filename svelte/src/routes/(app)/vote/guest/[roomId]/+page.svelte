@@ -2,44 +2,24 @@
   import { onMount } from "svelte";
   import { page } from "$app/stores";
   import { io } from "socket.io-client";
-  import { BaseButton, BaseInput } from "$lib/components";
-  import { randomGuestNames } from "./randomGuestNames";
+  import { randomGuestNames } from "../randomGuestNames";
 
   const socket = io('ws://localhost:3000')
+  let guestName = randomGuestNames[Math.floor(Math.random() * randomGuestNames.length)];
 
   socket.on('guest:receive_value', v => {
     console.log(v);
   });
 
-  const sessionId = $page.data.sessionId;
-  let isSetup: boolean = true;
-  let guestName = randomGuestNames[Math.floor(Math.random() * randomGuestNames.length)];
-
   onMount(async () => {
-    socket.emit('guest:connect', $page.params.roomId, $page.data.sessionId);
+    socket.emit('guest:connect', $page.params.roomId);
   })
-
-  const handleClickEmitGuestConnect = () => {
-    if (!guestName) return alert("ゲスト名を入力してください");
-    socket.emit('guest:connect', $page.params.roomId, )
-  }
 
 </script>
 
-<div class="vote-guest-page">
-  {#if isSetup}
-    <div class="input-guest-name">
-      <BaseInput
-        placeholder="名前を入力してください"
-        bind:value={guestName}
-      />
-      <div class="input-guest-name-btn">
-        <BaseButton on:click={handleClickEmitGuestConnect}>入室する</BaseButton>
-      </div>
-    </div>
-  {:else}
-    <h2>this is a good position</h2>
-  {/if}
+<div class="vote-guest-page-room">
+  <p>無事connect成功</p>
+  <p>次はもともとsessionIdが残ってるやつがここにアクセスしたらどうなるかやってみる</p>
 </div>
 
 <style lang="scss">

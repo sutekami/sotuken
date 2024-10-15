@@ -1,17 +1,17 @@
-import { Issue } from "@prisma/client";
-import RedisStore from "connect-redis";
-import Redis from "ioredis";
+import { Issue } from '@prisma/client';
+import RedisStore from 'connect-redis';
+import Redis from 'ioredis';
 
-const redis = new Redis(6379, "redis");
+const redis = new Redis(6379, 'redis');
 const store = new RedisStore({ client: redis });
 
-const BASE_ROOM_ID_KEY = "ROOM_ID_KEY_";
+const BASE_ROOM_ID_KEY = 'ROOM_ID_KEY_';
 const REDIS_EXPIRE_SECOND = 3600;
 
 type roomType = {
   roomId?: string; // uuidのroom識別子
   guestUsers?: { hash: string; guestName: string }[]; // sessionIdをKey、ゲスト名をValue
-  hostUsers?: string[]; // sessionIdをKey, ゲスト名をValue
+  hostUsers?: string[]; // hostとなるsessionIdの配列
   inVoting?: boolean; // 投票中かどうかのフラグ
   inResult?: boolean; // 結果表示中かどうかのフラグ
   voteStatus?: Record<number, string[]>; // 投票されたIssueSectionalOptionIdをKey、投票したところにユーザーのsessionIdを入れる
@@ -42,14 +42,7 @@ type Users = {
 }[];
 
 const ErrorType = {
-  RoomNotExists: { value: "RoomNotExists", msg: "ルームが存在しません" },
+  RoomNotExists: { value: 'RoomNotExists', msg: 'ルームが存在しません' },
 };
 
-export {
-  redis,
-  store,
-  roomType,
-  BASE_ROOM_ID_KEY,
-  REDIS_EXPIRE_SECOND,
-  ErrorType,
-};
+export { redis, store, roomType, BASE_ROOM_ID_KEY, REDIS_EXPIRE_SECOND, ErrorType };

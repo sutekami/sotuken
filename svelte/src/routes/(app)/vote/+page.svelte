@@ -3,10 +3,15 @@
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
   import { Req } from "$lib/request/index.ts";
+  import { page } from "$app/stores";
 
   onMount(() => {
-    if (!!$user) return;
-    goto('/signin')
+    if ($page.data.user) {
+      const { email, name, userId } = $page.data.user;
+      user.updateUser({ email, name, userId });
+    } else {
+      goto('/signin');
+    }
   })
 
   async function createRoom() {

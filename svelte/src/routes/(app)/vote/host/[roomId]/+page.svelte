@@ -15,6 +15,8 @@
   const { roomId, sessionId } = data;
 
   onMount(async () => {
+    const { email, name, userId } = $page.data.user;
+    user.updateUser({ email, name, userId });
     socket.emit('host:connect', roomId, sessionId, $user.userId);
   });
 

@@ -72,13 +72,62 @@ router.route('/vote/:roomId').get(async (req, res) => {
   else res.status(403).json();
 });
 
-router.route('/vote/:roomId/guest').get(async (req, res) => {
-  const redisKey = BASE_ROOM_ID_KEY + req.params.roomId;
-  const value: roomType = JSON.parse((await redis.get(redisKey)) || '{}');
-  const item = {
-    userName: (value.guestUsers || {})[req.cookies['_session_id']]?.userName,
-  };
-  res.status(200).json(item);
-});
+router
+  .route('/vote/guest/:roomId')
+  .get(async (req, res) => {
+    const sessionId = req.cookies['_session_id'];
+    if (!sessionId) {
+      return res.status(400).json();
+    }
+
+    const redisKey = BASE_ROOM_ID_KEY + req.params.roomId;
+    const value = await redis.get(redisKey);
+    if (!value) {
+      return res.status(404).json();
+    }
+
+    const room: roomType = JSON.parse(value);
+    if (!room.guestUsers?.find(e => e.hash === sessionId)) res.status(403).json();
+    else res.status(204).json();
+  })
+  .post(async (req, res) => {
+    const { guestName } = req.body;
+    const sessionId = req.cookies['_session_id'];
+    const redisKey = BASE_ROOM_ID_KEY + req.params.roomId;
+    const value = await redis.get(redisKey);
+    if (!value) return res.status(404).json();
+
+    const {
+      roomId,
+      guestUsers,
+      hostUsers,
+      inResult,
+      inVoting,
+      currentIssueId,
+      currentIssueSectionId,
+      issues,
+      roomPassword,
+      timeSecLimit,
+      voteStatus,
+    }: roomType = JSON.parse(value);
+
+    const setValue: roomType = {
+      roomId,
+      guestUsers: [...(guestUsers || []), { hash: sessionId, guestName }],
+      hostUsers,
+      inVoting,
+      inResult,
+      currentIssueId,
+      currentIssueSectionId,
+      issues,
+      roomPassword,
+      timeSecLimit,
+      voteStatus,
+    };
+
+    await redis.set(redisKey, JSON.stringify(setValue), 'EX', REDIS_EXPIRE_SECOND);
+
+    res.status(200).json();
+  });
 
 export default router;

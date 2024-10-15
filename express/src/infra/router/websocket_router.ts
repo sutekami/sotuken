@@ -77,17 +77,10 @@ export function webSocketRouter(socket: Socket, io: Server) {
     emitAllUser({ roomId, socket, value });
   });
 
-  socket.on('guest:connect', async (roomId: string, sessionId: string, guestUserName?: string) => {
+  socket.on('guest:connect', async (roomId: string) => {
     let value = await getRoomValue({ roomId });
 
-    if (!value.guestUsers?.find(e => e.hash === sessionId)) {
-      if (value.roomPassword) return socket.emit('guest:require_password');
-
-      const guestUsers = [...(value.guestUsers || []), { hash: sessionId, guestName: guestUserName ?? '' }];
-
-      value = setValue(value, { guestUsers });
-      setRoomValue({ roomId, value });
-    }
+    if (value.roomPassword) return socket.emit('guest:require_password');
 
     emitAllUser({ roomId, socket, value });
   });

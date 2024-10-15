@@ -1,42 +1,24 @@
-import { COOKIE_SESSION_ID } from '$lib/request';
-import { redirect } from '@sveltejs/kit';
+import { COOKIE_SESSION_ID, Req } from '$lib/request';
+import { error, redirect } from '@sveltejs/kit';
 
-export async function load({ params, cookies }) {
+export async function load({ fetch, params, cookies }) {
   const sessionId = cookies.get(COOKIE_SESSION_ID);
-  if (!sessionId) redirect(302, `/vote/guest?roomId=${params.roomId}`);
+  const req = Req.vote.guest.roomId.GET(params.roomId, sessionId);
+  const res = await fetch(req);
+  const statusCode = res.status;
+
+  if (res.ok)
+    return {
+      sessionId,
+    };
+
+  switch (statusCode) {
+    case 400:
+    case 403:
+      return redirect(302, `/vote/guest?roomId=${params.roomId}`);
+    case 404:
+      error(statusCode, '部屋が存在しません');
+    default:
+      error(statusCode, 'サーバーエラーが発生しました');
+  }
 }
-
-// import { error } from "@sveltejs/kit";
-
-// export async function load({ params, cookies }) {
-//   const fetchCheckRoomId = await checkRoomId({ params, cookies });
-//   if (!fetchCheckRoomId.ok)
-//     error(fetchCheckRoomId.status, "存在しない部屋です");
-
-//   const item = await (await getUserName({ params, cookies })).json();
-
-//   return {
-//     roomId: params.roomId,
-//     voteStatus: await fetchCheckRoomId.json(),
-//     sessionId: cookies.get("_session_id"),
-//     guestUserName: item.userName,
-//   };
-// }
-
-// async function checkRoomId({ params, cookies }) {
-//   const req = new Request(`http://express:3000/vote/${params.roomId}`, {
-//     headers: headers(cookies.get("_session_id")),
-//     method: "GET",
-//   });
-
-//   return await fetch(req);
-// }
-
-// async function getUserName({ params, cookies }) {
-//   const req = new Request(`http://express:3000/vote/${params.roomId}/guest`, {
-//     headers: headers(cookies.get("_session_id")),
-//     method: "GET",
-//   });
-
-//   return await fetch(req);
-// }
