@@ -6,7 +6,6 @@
   import { page } from '$app/stores';
   import Menu from './Menu.svelte';
   import { BaseTable, BaseTableCell, BaseTableRow } from '$lib/components';
-  import Table from '$lib/components/base/Table.svelte';
 
   const socket = io(`ws://localhost:${$page.data.env.SERVER_PORT}`, {
     withCredentials: true,
