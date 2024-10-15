@@ -87,7 +87,7 @@ export function webSocketRouter(socket: Socket, io: Server) {
 
   socket.on('host:update_setting', async () => {});
 
-  socket.on('host:start_vote', async () => {});
+  socket.on('host:start_vote', async (roomId: string) => {});
   // socket.on('hostJoinVoteRoom', async (roomId: string, sessionId: string) => {
   //   const value: roomType = await getRoomValue({ roomId });
   //   if (!value.hostUser?.sessionId) {

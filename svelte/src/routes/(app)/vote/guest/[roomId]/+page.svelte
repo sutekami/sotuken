@@ -5,10 +5,14 @@
 
   const socket = io('ws://localhost:3000');
   let guestName: string;
+  let inVoting: boolean;
+  let inResult: boolean;
 
   socket.on('guest:receive_value', v => {
     console.log(v);
-    guestName = v.guestUsers.find(e => e.hash === $page.data.sessionId).guestName;
+    guestName = v.guestUsers?.find(e => e.hash === $page.data.sessionId)?.guestName;
+    inVoting = v.inVoting;
+    inResult = v.inResult;
   });
 
   onMount(async () => {
