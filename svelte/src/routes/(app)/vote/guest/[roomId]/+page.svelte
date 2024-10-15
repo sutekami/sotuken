@@ -1,57 +1,26 @@
-<script lang='ts'>
-  import { onMount } from "svelte";
-  import { page } from "$app/stores";
-  import { io } from "socket.io-client";
-  import { randomGuestNames } from "../randomGuestNames";
+<script lang="ts">
+  import { onMount } from 'svelte';
+  import { page } from '$app/stores';
+  import { io } from 'socket.io-client';
 
-  const socket = io('ws://localhost:3000')
-  let guestName = randomGuestNames[Math.floor(Math.random() * randomGuestNames.length)];
+  const socket = io('ws://localhost:3000');
+  let guestName: string;
 
   socket.on('guest:receive_value', v => {
     console.log(v);
+    guestName = v.guestUsers.find(e => e.hash === $page.data.sessionId).guestName;
   });
 
   onMount(async () => {
     socket.emit('guest:connect', $page.params.roomId);
-  })
-
+  });
 </script>
 
 <div class="vote-guest-page-room">
-  <p>無事connect成功</p>
-  <p>次はもともとsessionIdが残ってるやつがここにアクセスしたらどうなるかやってみる</p>
+  <p>ユーザー名：{guestName}</p>
 </div>
 
-<style lang="scss">
-.vote-guest-page {
-  & {
-    padding: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .input {
-    & {
-      max-width: 1100px;
-    }
-    &-guest-name {
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-
-      &-btn {
-        width: auto;
-      }
-    }
-  }
-}
-</style>
-
-
-  <!-- // import { BaseInput, BaseButton } from "$lib/components/index.js";
+<!-- // import { BaseInput, BaseButton } from "$lib/components/index.js";
   // import { issueSection } from "$lib/store/issue_section";
   // import { onMount } from "svelte";
 
@@ -190,3 +159,31 @@
 }
 </style>
 -->
+
+<style lang="scss">
+  .vote-guest-page {
+    & {
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .input {
+      & {
+        max-width: 1100px;
+      }
+      &-guest-name {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+
+        &-btn {
+          width: auto;
+        }
+      }
+    }
+  }
+</style>
