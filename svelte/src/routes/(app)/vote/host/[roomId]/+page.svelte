@@ -21,7 +21,7 @@
   onMount(async () => {
     const { email, name, userId } = $page.data.user;
     user.updateUser({ email, name, userId });
-    socket.emit('host:connect', roomId, $user.userId);
+    socket.emit('host:connect', $user.userId);
   });
 
   socket.on('host:receive_value', v => {
@@ -49,7 +49,7 @@
     <div></div>
   {:else}
     <div class="home">
-      <Menu {roomId} on:copy={handleClickCopy} on:start={handleClickEmitStartVote} />
+      <Menu on:copy={handleClickCopy} on:start={handleClickEmitStartVote} />
       <div class="table">
         <BaseTable>
           <svelte:fragment slot="thead">

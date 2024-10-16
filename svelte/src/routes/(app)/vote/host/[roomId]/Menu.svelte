@@ -2,7 +2,6 @@
   import { issues } from '$lib/store/issue';
   import { createEventDispatcher } from 'svelte';
   import { BaseButton, BaseRadio } from '$lib/components/index.ts';
-  export let roomId;
 
   const dispatch = createEventDispatcher();
 
