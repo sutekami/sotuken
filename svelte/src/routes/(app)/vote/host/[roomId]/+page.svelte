@@ -40,6 +40,10 @@
   const handleClickEmitStartVote = () => {
     socket.emit('host:start_vote');
   };
+
+  const handleClickReset = () => {
+    location.href = '/vote';
+  };
 </script>
 
 <div class="vote-host-page">
@@ -49,7 +53,7 @@
     <div></div>
   {:else}
     <div class="home">
-      <Menu on:copy={handleClickCopy} on:start={handleClickEmitStartVote} />
+      <Menu on:copy={handleClickCopy} on:start={handleClickEmitStartVote} on:reset={handleClickReset} />
       <div class="table">
         <BaseTable>
           <svelte:fragment slot="thead">

@@ -16,6 +16,7 @@
   <BaseButton hoverColor="_blue" on:click={() => dispatch('copy')}>ゲストユーザーを招待する</BaseButton>
   <BaseButton hoverColor="_purple" on:click={() => dispatch('start')}>投票を始める</BaseButton>
   <BaseButton hoverColor="_indigo" on:click={() => dispatch('debug')}>デバッグ用ボタン</BaseButton>
+  <BaseButton on:click={() => dispatch('reset')}>リセット</BaseButton>
 </div>
 
 {#each $issues || [] as issue}

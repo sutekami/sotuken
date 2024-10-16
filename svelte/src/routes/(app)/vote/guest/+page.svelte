@@ -9,7 +9,7 @@
   let guestName = randomGuestNames[Math.floor(Math.random() * randomGuestNames.length)];
 
   const handleClickEmitGuestConnect = async () => {
-    guestName = guestName || randomGuestNames[Math.floor(Math.random() * randomGuestNames.length)];
+    guestName ||= randomGuestNames[Math.floor(Math.random() * randomGuestNames.length)];
     const params = JSON.stringify({
       guestName,
     });
