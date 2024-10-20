@@ -24,6 +24,11 @@
 
 <div class="vote-guest-page-room">
   <p>ユーザー名：{guestName}</p>
+  {#if inVoting}
+    <p>投票画面</p>
+  {:else}
+    <p>待機画面</p>
+  {/if}
 </div>
 
 <!-- // import { BaseInput, BaseButton } from "$lib/components/index.js";

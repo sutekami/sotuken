@@ -107,6 +107,10 @@ export function webSocketRouter(socket: Socket, io: Server) {
   socket.on('host:start_vote', async () => {
     const roomId = parseCookie(socket)['room_id']!;
     let value = await getRoomValue({ roomId });
+
+    value = setValue(value, { inVoting: true });
+    setRoomValue({ roomId, value });
+
     emitAllUser({ roomId, socket, value });
   });
 
