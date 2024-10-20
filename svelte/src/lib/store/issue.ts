@@ -28,5 +28,5 @@ function createIssues() {
   };
 }
 
-export const issue = createIssue();
-export const issues = createIssues();
+export const storeIssue = createIssue();
+export const storeIssues = createIssues();

@@ -26,5 +26,5 @@ function createIssueSectionalOptions() {
   };
 }
 
-export const issueSectionalOption = createIssueSectionalOption();
-export const issueSectionalOptions = createIssueSectionalOptions();
+export const storeissueSectionalOption = createIssueSectionalOption();
+export const storeIssueSectionalOptions = createIssueSectionalOptions();

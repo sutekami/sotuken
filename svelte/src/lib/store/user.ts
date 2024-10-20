@@ -23,4 +23,4 @@ function createUser() {
   };
 }
 
-export const user = createUser();
+export const storeUser = createUser();

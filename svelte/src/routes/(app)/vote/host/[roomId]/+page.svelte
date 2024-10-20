@@ -1,27 +1,27 @@
 <script lang="ts">
-  import { user } from '$lib/store/user.js';
+  import { storeUser } from '$lib/store/user.js';
   import { io } from 'socket.io-client';
   import { onMount } from 'svelte';
-  import { issues } from '$lib/store/issue.ts';
+  import { storeIssues } from '$lib/store/issue.ts';
   import { page } from '$app/stores';
   import Menu from './Menu.svelte';
   import { BaseTable, BaseTableCell, BaseTableRow } from '$lib/components';
 
-  const socket = io(`ws://localhost:${$page.data.env.SERVER_PORT}`, {
+  const { env, roomId } = $page.data;
+
+  const socket = io(`ws://localhost:${env.SERVER_PORT}`, {
     withCredentials: true,
   });
 
-  export let data;
   let inVoting: boolean;
   let inResult: boolean;
   let guestUsers: any[] = [];
-
-  const { roomId } = data;
+  let selectedIssueId: number;
 
   onMount(async () => {
     const { email, name, userId } = $page.data.user;
-    user.updateUser({ email, name, userId });
-    socket.emit('host:connect', $user.userId);
+    storeUser.updateUser({ email, name, userId });
+    socket.emit('host:connect', $storeUser.userId);
   });
 
   socket.on('host:receive_value', v => {
@@ -29,11 +29,11 @@
     inVoting = v.inVoting ?? inVoting;
     inResult = v.inResult ?? inResult;
     guestUsers = [...(v.guestUsers ?? [])];
-    issues.updateIssues(v.issues);
+    storeIssues.updateIssues(v.issues);
   });
 
   const handleClickCopy = async () => {
-    const writeText = `localhost:${$page.data.env.CLIENT_PORT}/vote/guest/${data.roomId}`;
+    const writeText = `localhost:${env.CLIENT_PORT}/vote/guest/${roomId}`;
     navigator.clipboard.writeText(writeText);
   };
 

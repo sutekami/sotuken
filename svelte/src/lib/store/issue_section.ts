@@ -38,5 +38,5 @@ function createIssueSections() {
   };
 }
 
-export const issueSection = createIssueSection();
-export const issueSections = createIssueSections();
+export const storeIssueSection = createIssueSection();
+export const storeIssueSections = createIssueSections();

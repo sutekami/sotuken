@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { issues } from '$lib/store/issue';
+  import { storeIssues } from '$lib/store/issue';
   import { createEventDispatcher } from 'svelte';
   import { BaseButton, BaseRadio } from '$lib/components/index.ts';
 
@@ -19,7 +19,7 @@
   <BaseButton on:click={() => dispatch('reset')}>リセット</BaseButton>
 </div>
 
-{#each $issues || [] as issue}
+{#each $storeIssues || [] as issue}
   <input
     type="radio"
     name="issue"
