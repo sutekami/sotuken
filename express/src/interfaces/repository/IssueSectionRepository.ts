@@ -15,6 +15,17 @@ export class IssueSectionRepository implements IRepository<IssueSection> {
     return issueSection;
   }
 
+  static async first(params: any) {
+    const issueSection = await prisma.issueSection.findFirst({
+      where: { ...params },
+      include: {
+        issueSectionalOptions: true,
+      },
+    });
+    await prisma.$disconnect();
+    return issueSection;
+  }
+
   static async create(
     params: IssueSection & { issueSectionalOptions: Array<IssueSectionalOption> },
     issueId: number,

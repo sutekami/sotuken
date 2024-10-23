@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { user } from '$lib/store/user';
+  import { storeUser } from '$lib/store/user';
   import type { IssueSectionType } from '$lib/store/issue_section';
   import type { IssueSectionalOptionType } from '$lib/store/issue_sectional_option';
   import { onMount } from 'svelte';
 
   onMount(() => {
     const { email, name, userId } = data.user;
-    user.updateUser({ email, name, userId });
+    storeUser.updateUser({ email, name, userId });
   });
 
   export let data;
@@ -69,7 +69,7 @@
 
     const issue = {
       title: issueTitle,
-      userId: $user.userId,
+      userId: $storeUser.userId,
       issueSections: newIssueSections,
     };
 

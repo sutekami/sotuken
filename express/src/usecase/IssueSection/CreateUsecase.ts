@@ -1,5 +1,5 @@
-import { IssueSection, IssueSectionalOption } from "@prisma/client";
-import { IssueSeectionRepository } from "interfaces/repository/IssueSectionRepository";
+import { IssueSection, IssueSectionalOption } from '@prisma/client';
+import { IssueSectionRepository } from 'interfaces/repository/IssueSectionRepository';
 
 export class CreateUsecase implements IUsecase {
   private params: IssueSection & { issueSectionalOptions: Array<IssueSectionalOption> };
@@ -11,7 +11,7 @@ export class CreateUsecase implements IUsecase {
   }
 
   async handle(): Promise<any> {
-    const issueSection = IssueSeectionRepository.create(this.params, this.issueId);
+    const issueSection = IssueSectionRepository.create(this.params, this.issueId);
     return issueSection;
   }
 }

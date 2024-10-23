@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { io } from 'socket.io-client';
+  import { storeIssueSection } from '$lib/store/issue_section';
 
   const socket = io(`ws://localhost:${$page.data.env.SERVER_PORT}`, {
     withCredentials: true,
@@ -11,10 +12,13 @@
   let inResult: boolean;
 
   socket.on('guest:receive_value', v => {
-    console.log(v);
     guestName = v.guestUsers?.find(e => e.hash === $page.data.sessionId)?.guestName;
     inVoting = v.inVoting;
     inResult = v.inResult;
+  });
+
+  socket.on('guest:receive_issue_section', v => {
+    storeIssueSection.updateIssueSection(v);
   });
 
   onMount(async () => {

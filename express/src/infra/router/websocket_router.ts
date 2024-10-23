@@ -42,7 +42,14 @@ function setValue(
   };
 }
 
-function emitAllUser({ socket, value, roomId }: { socket: Socket; value: roomType; roomId: string }) {
+async function emitAllUser({ socket, value, roomId }: { socket: Socket; value: roomType; roomId: string }) {
+  if (!!value.currentIssueSectionId) {
+    const issueSection = await bundle.IssueSectionRepository.find(value.currentIssueSectionId);
+    socket.emit('host:receive_issue_section', issueSection);
+    socket.emit('guest:receive_issue_section', issueSection);
+    socket.to(roomId).emit('host:receive_issue_section', issueSection);
+    socket.to(roomId).emit('guest:receive_issue_section', issueSection);
+  }
   socket.emit('host:receive_value', value);
   socket.emit('guest:receive_value', value);
   socket.to(roomId).emit('host:receive_value', value);
@@ -104,11 +111,15 @@ export function webSocketRouter(socket: Socket, io: Server) {
 
   socket.on('host:update_setting', async () => {});
 
-  socket.on('host:start_vote', async () => {
+  socket.on('host:start_vote', async (issueId: number) => {
     const roomId = parseCookie(socket)['room_id']!;
     let value = await getRoomValue({ roomId });
+    const issue = await bundle.IssueRepository.find(issueId);
 
-    value = setValue(value, { inVoting: true });
+    const currentIssueId = issueId;
+    const currentIssueSectionId = issue?.issueSections[0].issueSectionId;
+
+    value = setValue(value, { currentIssueId, currentIssueSectionId, inVoting: true });
     setRoomValue({ roomId, value });
 
     emitAllUser({ roomId, socket, value });

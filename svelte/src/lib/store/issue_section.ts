@@ -4,7 +4,6 @@ import type { IssueSectionalOptionType } from './issue_sectional_option';
 export type IssueSectionType = {
   issueSectionId?: number | string;
   issueId?: number;
-  type?: string;
   title?: string;
   issueSectionalOptions?: Array<IssueSectionalOptionType>;
 };
@@ -19,7 +18,6 @@ function createIssueSection() {
         return {
           issueSectionId: params.issueSectionId || v.issueSectionId,
           issueId: params.issueId || v.issueId,
-          type: params.type || v.type,
           title: params.title || v.title,
           issueSectionalOptions: params.issueSectionalOptions || v.issueSectionalOptions,
         };

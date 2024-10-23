@@ -1,4 +1,4 @@
-import { Issue } from '@prisma/client';
+import { Issue, IssueSection, IssueSectionalOption } from '@prisma/client';
 import RedisStore from 'connect-redis';
 import Redis from 'ioredis';
 

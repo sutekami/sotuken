@@ -3,6 +3,7 @@
   import { io } from 'socket.io-client';
   import { onMount } from 'svelte';
   import { storeIssues } from '$lib/store/issue.ts';
+  import { storeIssueSection } from '$lib/store/issue_section';
   import { page } from '$app/stores';
   import Menu from './Menu.svelte';
   import { BaseTable, BaseTableCell, BaseTableRow } from '$lib/components';
@@ -25,11 +26,14 @@
   });
 
   socket.on('host:receive_value', v => {
-    console.log(v);
     inVoting = v.inVoting ?? inVoting;
     inResult = v.inResult ?? inResult;
     guestUsers = [...(v.guestUsers ?? [])];
     storeIssues.updateIssues(v.issues);
+  });
+
+  socket.on('host:receive_issue_section', v => {
+    storeIssueSection.updateIssueSection(v);
   });
 
   const handleClickCopy = async () => {
@@ -38,11 +42,16 @@
   };
 
   const handleClickEmitStartVote = () => {
-    socket.emit('host:start_vote');
+    if (!selectedIssueId) return alert('投票するテーマを選択してください');
+    socket.emit('host:start_vote', selectedIssueId);
   };
 
   const handleClickReset = () => {
     location.href = '/vote';
+  };
+
+  const handleSelectIssueId = (e: CustomEvent<number>) => {
+    selectedIssueId = e.detail;
   };
 </script>
 
@@ -53,7 +62,13 @@
     <div class="result"></div>
   {:else}
     <div class="home">
-      <Menu on:copy={handleClickCopy} on:start={handleClickEmitStartVote} on:reset={handleClickReset} />
+      <Menu
+        on:copy={handleClickCopy}
+        on:start={handleClickEmitStartVote}
+        on:reset={handleClickReset}
+        on:select={handleSelectIssueId}
+        {selectedIssueId}
+      />
       <div class="table">
         <BaseTable>
           <svelte:fragment slot="thead">

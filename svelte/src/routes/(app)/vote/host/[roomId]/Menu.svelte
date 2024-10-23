@@ -3,12 +3,22 @@
   import { createEventDispatcher } from 'svelte';
   import { BaseButton, BaseRadio } from '$lib/components/index.ts';
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<{
+    copy: null;
+    start: null;
+    debug: null;
+    reset: null;
+    select: number;
+  }>();
 
-  let selectedValue = 1;
+  export let selectedIssueId: number;
 
-  function hoge(value: CustomEvent) {
-    selectedValue = value.detail.detail;
+  const handleClickRadioButton = (e: CustomEvent<string>) => {
+    selectedIssueId = parseInt(e.detail);
+  };
+
+  $: {
+    dispatch('select', selectedIssueId);
   }
 </script>
 
@@ -19,26 +29,30 @@
   <BaseButton on:click={() => dispatch('reset')}>リセット</BaseButton>
 </div>
 
-{#each $storeIssues || [] as issue}
-  <input
-    type="radio"
-    name="issue"
-    bind:value={issue.issueId}
-    id="issue_id_{issue.issueId}"
-    on:click={e => dispatch('selected', e)}
-  />
-  <label for="issue_id_{issue.issueId}">{issue.title}</label>
-{/each}
-
-<!-- <BaseRadio name="test" value="1" selectedValue={selectedValue} id="1" on:click={hoge} />
-<BaseRadio name="test" value="2" selectedValue={selectedValue} id="2" on:click={hoge} />
-<BaseRadio name="test" value="3" selectedValue={selectedValue} id="3" on:click={hoge} />
-<BaseRadio name="test" value="4" selectedValue={selectedValue} id="4" on:click={hoge} />
-<BaseRadio name="test" value="5" selectedValue={selectedValue} id="5" on:click={hoge} /> -->
+<div>投票内容を選択する</div>
+<div class="issues">
+  {#each $storeIssues || [] as issue}
+    <BaseRadio
+      name="issue"
+      value={issue.issueId?.toString()}
+      bind:group={selectedIssueId}
+      id="issue_id_{issue.issueId}"
+      on:click={handleClickRadioButton}
+    >
+      {issue.title}
+    </BaseRadio>
+  {/each}
+</div>
 
 <style lang="scss">
   .btns {
     display: flex;
+    justify-content: space-evenly;
+  }
+
+  .issues {
+    display: flex;
+    padding: 10px 0;
     justify-content: space-evenly;
   }
 </style>
