@@ -14,7 +14,7 @@ type roomType = {
   hostUsers?: string[]; // hostとなるsessionIdの配列
   inVoting?: boolean; // 投票中かどうかのフラグ
   inResult?: boolean; // 結果表示中かどうかのフラグ
-  voteStatus?: Record<number, string[]>; // 投票されたIssueSectionalOptionIdをKey、投票したところにユーザーのsessionIdを入れる
+  voteStatus?: Record<string, number>; // 投票されたIssueSectionalOptionIdをKey、投票したところにユーザーのsessionIdを入れる
   timeSecLimit?: number; // 投票の制限時間
   issues?: Issue[]; // ホスト側で設定したい投票テーマが型となったArray
   currentIssueId?: number; // ホストが設定した投票テーマのprimary_key

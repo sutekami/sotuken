@@ -26,7 +26,6 @@
     bind:group={selectedValue}
     on:click={handleClickDispatch}
   />
-  <span class="radio-mark"></span>
   <label for={id}>
     <slot></slot>
   </label>
@@ -52,6 +51,10 @@
     &:hover {
       background-color: #7986cb;
       color: #333;
+    }
+
+    label {
+      cursor: pointer;
     }
   }
 </style>

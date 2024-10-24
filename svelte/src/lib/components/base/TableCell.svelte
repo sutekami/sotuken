@@ -15,9 +15,9 @@
     <slot></slot>
   </td>
 {:else}
-  <div>
+  <td>
     <slot></slot>
-  </div>
+  </td>
 {/if}
 
 <style lang="scss">

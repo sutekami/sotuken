@@ -17,6 +17,7 @@
   let inVoting: boolean;
   let inResult: boolean;
   let guestUsers: any[] = [];
+  let voteStatus: Record<string, number> = {};
   let selectedIssueId: number;
 
   onMount(async () => {
@@ -29,6 +30,7 @@
     inVoting = v.inVoting ?? inVoting;
     inResult = v.inResult ?? inResult;
     guestUsers = [...(v.guestUsers ?? [])];
+    voteStatus = v.voteStatus;
     storeIssues.updateIssues(v.issues);
   });
 
@@ -53,22 +55,45 @@
   const handleSelectIssueId = (e: CustomEvent<number>) => {
     selectedIssueId = e.detail;
   };
+
+  const displayGuestAnswer = (sId: string) => {
+    const answer = voteStatus[sId];
+    const option = $storeIssueSection.issueSectionalOptions?.find(e => e.issueSectionalOptionId === answer);
+    return !!option ? option.body : '解答中';
+  };
 </script>
 
 <div class="vote-host-page">
+  <Menu
+    on:copy={handleClickCopy}
+    on:start={handleClickEmitStartVote}
+    on:reset={handleClickReset}
+    on:select={handleSelectIssueId}
+    {selectedIssueId}
+  />
   {#if inVoting}
-    <div class="vote"></div>
+    <div class="vote">
+      <BaseTable>
+        <svelte:fragment slot="thead">
+          <BaseTableRow>
+            <BaseTableCell th>ゲスト名</BaseTableCell>
+            <BaseTableCell th>解答結果</BaseTableCell>
+          </BaseTableRow>
+        </svelte:fragment>
+        <svelte:fragment slot="tbody">
+          {#each guestUsers as user}
+            <BaseTableRow>
+              <BaseTableCell td>{user.guestName}</BaseTableCell>
+              <BaseTableCell td>{displayGuestAnswer(user.hash)}</BaseTableCell>
+            </BaseTableRow>
+          {/each}
+        </svelte:fragment>
+      </BaseTable>
+    </div>
   {:else if inResult}
     <div class="result"></div>
   {:else}
     <div class="home">
-      <Menu
-        on:copy={handleClickCopy}
-        on:start={handleClickEmitStartVote}
-        on:reset={handleClickReset}
-        on:select={handleSelectIssueId}
-        {selectedIssueId}
-      />
       <div class="table">
         <BaseTable>
           <svelte:fragment slot="thead">
@@ -98,6 +123,7 @@
     & {
       padding: 24px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
     }

@@ -125,6 +125,20 @@ export function webSocketRouter(socket: Socket, io: Server) {
     emitAllUser({ roomId, socket, value });
   });
 
+  socket.on('guest:vote', async (optionId: number) => {
+    const roomId = parseCookie(socket)['room_id']!;
+    const sessionId = parseCookie(socket)['_session_id']!;
+    let value = await getRoomValue({ roomId });
+
+    let voteStatus: Record<string, number> = { ...value.voteStatus };
+    voteStatus[sessionId] = optionId;
+
+    value = setValue(value, { voteStatus });
+    setRoomValue({ roomId, value });
+
+    emitAllUser({ roomId, socket, value });
+  });
+
   socket.on('disconnect', async () => {
     console.log('user disconnection');
     const targetSessionId = parseCookie(socket)['_session_id']!;

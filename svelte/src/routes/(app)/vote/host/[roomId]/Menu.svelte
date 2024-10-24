@@ -29,19 +29,21 @@
   <BaseButton on:click={() => dispatch('reset')}>リセット</BaseButton>
 </div>
 
-<div>投票内容を選択する</div>
-<div class="issues">
-  {#each $storeIssues || [] as issue}
-    <BaseRadio
-      name="issue"
-      value={issue.issueId?.toString()}
-      bind:group={selectedIssueId}
-      id="issue_id_{issue.issueId}"
-      on:click={handleClickRadioButton}
-    >
-      {issue.title}
-    </BaseRadio>
-  {/each}
+<div>
+  <div>問題を選択する</div>
+  <div class="issues">
+    {#each $storeIssues || [] as issue}
+      <BaseRadio
+        name="issue"
+        value={`${issue.issueId}`}
+        id="issue_id_{issue.issueId}"
+        on:click={handleClickRadioButton}
+        selectedValue={`${selectedIssueId}`}
+      >
+        {issue.title}
+      </BaseRadio>
+    {/each}
+  </div>
 </div>
 
 <style lang="scss">

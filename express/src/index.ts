@@ -31,7 +31,8 @@ const sessionMiddleware = expressSession({
   saveUninitialized: true,
   store,
   cookie: {
-    maxAge: 3600 * 24 * 7,
+    // cookieの有効期限は一旦24h
+    maxAge: 1000 * 3600 * 24, // ms指定
   },
 });
 
