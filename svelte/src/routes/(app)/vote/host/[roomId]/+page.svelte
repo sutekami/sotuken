@@ -6,7 +6,7 @@
   import { storeIssueSection } from '$lib/store/issue_section';
   import { page } from '$app/stores';
   import Menu from './Menu.svelte';
-  import { BaseTable, BaseTableCell, BaseTableRow } from '$lib/components';
+  import { BaseButton, BaseTable, BaseTableCell, BaseTableRow } from '$lib/components';
 
   const { env, roomId } = $page.data;
 
@@ -19,6 +19,7 @@
   let guestUsers: any[] = [];
   let voteStatus: Record<string, number> = {};
   let selectedIssueId: number;
+  let isAbleDisclose: boolean = false;
 
   onMount(async () => {
     const { email, name, userId } = $page.data.user;
@@ -30,8 +31,9 @@
     inVoting = v.inVoting ?? inVoting;
     inResult = v.inResult ?? inResult;
     guestUsers = [...(v.guestUsers ?? [])];
-    voteStatus = v.voteStatus;
+    voteStatus = v.voteStatus ?? {};
     storeIssues.updateIssues(v.issues);
+    handleSocketOnIsAbleDisclose();
   });
 
   socket.on('host:receive_issue_section', v => {
@@ -39,7 +41,7 @@
   });
 
   const handleClickCopy = async () => {
-    const writeText = `localhost:${env.CLIENT_PORT}/vote/guest/${roomId}`;
+    const writeText = `${location.protocol}//${location.hostname}:${env.CLIENT_PORT}/vote/guest/${roomId}`;
     navigator.clipboard.writeText(writeText);
   };
 
@@ -59,7 +61,19 @@
   const displayGuestAnswer = (sId: string) => {
     const answer = voteStatus[sId];
     const option = $storeIssueSection.issueSectionalOptions?.find(e => e.issueSectionalOptionId === answer);
-    return !!option ? option.body : '解答中';
+    return !!option ? option.body : '回答中';
+  };
+
+  const handleSocketOnIsAbleDisclose = () => {
+    let count = 0;
+    for (let _ in voteStatus) {
+      count++;
+    }
+    isAbleDisclose = count === guestUsers.length;
+  };
+
+  const handleClickEmitResult = () => {
+    socket.emit('host:result');
   };
 </script>
 
@@ -73,6 +87,11 @@
   />
   {#if inVoting}
     <div class="vote">
+      <div class="btn">
+        <BaseButton disabled={!isAbleDisclose}>
+          {isAbleDisclose ? '結果を表示する' : '全員の投票が終わるまでお待ちください'}
+        </BaseButton>
+      </div>
       <BaseTable>
         <svelte:fragment slot="thead">
           <BaseTableRow>
@@ -128,10 +147,21 @@
       justify-content: center;
     }
 
-    .table {
-      padding: 8px;
-      display: flex;
-      justify-content: center;
+    .vote {
+      & {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn {
+        min-width: 50%;
+      }
+      .table {
+        padding: 8px;
+        display: flex;
+        justify-content: center;
+      }
     }
   }
 </style>
