@@ -13,6 +13,7 @@
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
+		"chart.js": "^4.4.5",
 		"page": "^1.11.6",
 		"sass": "^1.77.8",
 		"svelte": "^4.2.7",

@@ -7,7 +7,6 @@
   import { page } from '$app/stores';
   import Menu from './Menu.svelte';
   import { BaseButton, BaseTable, BaseTableCell, BaseTableRow } from '$lib/components';
-
   const { env, roomId } = $page.data;
 
   const socket = io(`ws://localhost:${env.SERVER_PORT}`, {
@@ -73,7 +72,12 @@
   };
 
   const handleClickEmitResult = () => {
+    if (!confirm('投票を終了し、ゲストに結果を表示します。よろしいですか？')) return;
     socket.emit('host:result');
+  };
+
+  const handleClickEmitNextVote = () => {
+    socket.emit('host:next_vote');
   };
 </script>
 
@@ -88,8 +92,8 @@
   {#if inVoting}
     <div class="vote">
       <div class="btn">
-        <BaseButton disabled={!isAbleDisclose}>
-          {isAbleDisclose ? '結果を表示する' : '全員の投票が終わるまでお待ちください'}
+        <BaseButton disabled={!isAbleDisclose} on:click={handleClickEmitResult}>
+          {isAbleDisclose ? 'ゲストに結果を表示する' : '全員の投票が終わるまでお待ちください'}
         </BaseButton>
       </div>
       <BaseTable>
@@ -100,7 +104,7 @@
           </BaseTableRow>
         </svelte:fragment>
         <svelte:fragment slot="tbody">
-          {#each guestUsers as user}
+          {#each guestUsers.filter(user => user.isActive) as user}
             <BaseTableRow>
               <BaseTableCell td>{user.guestName}</BaseTableCell>
               <BaseTableCell td>{displayGuestAnswer(user.hash)}</BaseTableCell>
@@ -108,6 +112,11 @@
           {/each}
         </svelte:fragment>
       </BaseTable>
+      {#if inResult}
+        <div class="btn">
+          <BaseButton on:click={handleClickEmitNextVote}>次の投票へ移る</BaseButton>
+        </div>
+      {/if}
     </div>
   {:else if inResult}
     <div class="result"></div>

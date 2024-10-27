@@ -1,8 +1,8 @@
 import { writable } from 'svelte/store';
 
 export type IssueSectionalOptionType = {
-  issueSectionalOptionId?: number | string;
-  issueSectionId?: number | string;
+  issueSectionalOptionId?: number;
+  issueSectionId?: number;
   body?: string;
 };
 

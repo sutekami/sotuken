@@ -2,7 +2,7 @@ import { writable } from 'svelte/store';
 import type { IssueSectionalOptionType } from './issue_sectional_option';
 
 export type IssueSectionType = {
-  issueSectionId?: number | string;
+  issueSectionId?: number;
   issueId?: number;
   title?: string;
   issueSectionalOptions?: Array<IssueSectionalOptionType>;
