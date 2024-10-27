@@ -4,9 +4,9 @@ const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
   entry: {
-    index: "./src/index.ts",
+    index: './src/index.ts',
   },
-  mode: "development",
+  mode: 'development',
   output: {
     path: path.resolve(__dirname, '.dist'),
     filename: '[name].bundle.js',
@@ -17,10 +17,7 @@ module.exports = {
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
-    modules: [
-      path.resolve(__dirname, 'src'),
-      'node_modules',
-    ],
+    modules: [path.resolve(__dirname, 'src'), 'node_modules'],
   },
   node: {
     __dirname: false,
@@ -32,4 +29,5 @@ module.exports = {
   stats: {
     errorDetails: true,
   },
+  cache: false,
 };
