@@ -148,7 +148,7 @@ export function webSocketRouter(socket: Socket, io: Server) {
     value = setValue(value, {
       currentIssueSectionId,
       inResult: false,
-      inVoting: !!currentIssueSectionId,
+      inVoting: !!currentIssueSectionId, // currentIssueSectionIdがなければ投票を終了する
       voteStatus: {},
     });
     setRoomValue({ roomId, value });
