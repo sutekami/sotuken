@@ -21,8 +21,8 @@
   let isAbleDisclose: boolean = false;
 
   onMount(async () => {
-    const { email, name, userId } = $page.data.user;
-    storeUser.updateUser({ email, name, userId });
+    const { name, userId } = $page.data.user;
+    storeUser.updateUser({ name, userId });
     socket.emit('host:connect', $storeUser.userId);
   });
 
