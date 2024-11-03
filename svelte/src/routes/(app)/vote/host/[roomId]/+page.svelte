@@ -127,7 +127,6 @@
           <svelte:fragment slot="thead">
             <BaseTableRow>
               <BaseTableCell th>ゲスト名</BaseTableCell>
-              <BaseTableCell th>sessionId</BaseTableCell>
               <BaseTableCell th>接続中</BaseTableCell>
             </BaseTableRow>
           </svelte:fragment>
@@ -135,7 +134,6 @@
             {#each guestUsers as guestUser}
               <BaseTableRow>
                 <BaseTableCell td>{guestUser.guestName}</BaseTableCell>
-                <BaseTableCell td>{guestUser.hash}</BaseTableCell>
                 <BaseTableCell td>{guestUser.isActive ? '接続中' : '切断中'}</BaseTableCell>
               </BaseTableRow>
             {/each}
