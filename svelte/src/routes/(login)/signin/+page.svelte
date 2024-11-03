@@ -1,17 +1,16 @@
 <script lang="ts">
-  import { Form, Input, Button } from "$lib/components";
-  import Client from "$lib/client";
+  import { apiHandler } from '$lib/client';
+  import { Form, Input, Button } from '$lib/components';
 
   let email: string, password: string;
   const handleSave = async () => {
-    const params = { email, password }
-    const res = await new Client(Client.CLIENT, {
-      url: '/api/signin',
-      method: "POST",
-      body: JSON.stringify(params),
-    }).fetch();
-
-    location.href = '/mypage';
+    const params = { email, password };
+    await apiHandler({
+      method: 'POST',
+      to: 'api',
+      uri: '/signin',
+      body: params,
+    }).then(() => (location.href = '/mypage'));
   };
 </script>
 

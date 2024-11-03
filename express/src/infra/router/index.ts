@@ -10,16 +10,14 @@ router.use((req, res, next) => {
   next();
 });
 
-router.route('/').get((req, res) => {
-  res.status(204).send();
-});
-
 router.route('/session').get(async (req, res, next) => {
   const { session } = req;
   if (session.userId) {
     const user = await bundle.UserRepository.find(session.userId);
     res.status(200).json(user);
-  } else res.status(403).send('nothing');
+  } else {
+    res.sendStatus(403);
+  }
 });
 
 router
