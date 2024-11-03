@@ -72,6 +72,15 @@ export const Req = {
         body: params,
       }),
   },
+  new_issue: {
+    POST: (params: string, sessionId?: string) =>
+      new Request(joinUrl(BASE_URL, 'new-issue'), {
+        ...BASE_INIT,
+        method: 'POST',
+        body: params,
+        headers: headers(sessionId),
+      }),
+  },
 
   api: {
     root: () =>
@@ -99,6 +108,14 @@ export const Req = {
     signin: {
       POST: (params: string) =>
         new Request(joinUrl(BASE_API_URL, 'signin'), {
+          ...BASE_INIT,
+          method: 'POST',
+          body: params,
+        }),
+    },
+    new_issue: {
+      POST: (params: string) =>
+        new Request(joinUrl(BASE_API_URL, 'new-issue'), {
           ...BASE_INIT,
           method: 'POST',
           body: params,

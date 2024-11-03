@@ -2,12 +2,15 @@
   // initialize
   import { createEventDispatcher } from 'svelte';
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<{
+    input: string;
+  }>();
   //
 
   // props
   export let placeholder: string = '';
   export let value: string = '';
+  export let sm: boolean = false;
   // props
 
   function handleInputDispatcher(v: EventElements): void {
@@ -16,7 +19,7 @@
   }
 </script>
 
-<input class="base-input" type="text" {placeholder} {value} on:input={handleInputDispatcher} />
+<input class="base-input {sm ? 'sm' : ''}" type="text" {placeholder} {value} on:input={handleInputDispatcher} />
 
 <style lang="scss">
   .base-input {
@@ -37,5 +40,10 @@
       border-color: #aaa;
       outline: none;
     }
+  }
+
+  .sm {
+    padding: 3px 6px;
+    font-size: 13px;
   }
 </style>
