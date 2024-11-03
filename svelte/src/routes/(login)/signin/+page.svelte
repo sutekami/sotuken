@@ -4,7 +4,7 @@
 
   let name: string, password: string;
   const handleSave = async () => {
-    const params = { email, password };
+    const params = { name, password };
     await apiHandler({
       method: 'POST',
       to: 'api',
