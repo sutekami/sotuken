@@ -9,14 +9,12 @@ datasource db {
 
 model User {
   userId    Int      @id @default(autoincrement()) @map("user_id")
-  name      String
-  email     String   @unique
+  name     String   @unique
   password  String
   issues    Issue[]
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@index([userId])
   @@map("user")
 }
 
@@ -29,7 +27,7 @@ model Issue {
   createdAt     DateTime       @default(now()) @map("created_at")
   updatedAt     DateTime       @updatedAt @map("updated_at")
 
-  @@index([issueId, userId])
+  @@index([userId])
   @@map("issue")
 }
 
@@ -42,7 +40,7 @@ model IssueSection {
   createdAt             DateTime               @default(now()) @map("created_at")
   updatedAt             DateTime               @updatedAt @map("updated_at")
 
-  @@index([issueSectionId, issueId])
+  @@index([issueId])
   @@map("issue_section")
 }
 
@@ -54,6 +52,6 @@ model IssueSectionalOption {
   createdAt              DateTime     @default(now()) @map("created_at")
   updatedAt              DateTime     @updatedAt @map("updated_at")
 
-  @@index([issueSectionalOptionId, issueSectionId])
+  @@index([issueSectionId])
   @@map("issue_sectional_option")
 }

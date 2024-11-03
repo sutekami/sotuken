@@ -1,23 +1,23 @@
 <script lang="ts">
-  import api from "$lib/api";
-  import toastr from "$lib/utils/toastr";
-  import Input from "$lib/components/Input.svelte";
-  import Form from "$lib/components/Form.svelte";
-  import Button from "$lib/components/Button.svelte";
+  import toastr from '$lib/utils/toastr';
+  import Input from '$lib/components/Input.svelte';
+  import Form from '$lib/components/Form.svelte';
+  import Button from '$lib/components/Button.svelte';
 
   let name: string, email: string, password: string;
 
   const handleSave = async () => {
     let params: Record<string, string>;
     params = { name, email, password };
-    await api.signup.create({ params })
+    await api.signup
+      .create({ params })
       .then(() => {
-        location.href = "/mypage"
+        location.href = '/mypage';
       })
-      .catch((data) => {
+      .catch(data => {
         toastr.handleError(data.response.data.err);
       });
-  }
+  };
 </script>
 
 <div class="form">

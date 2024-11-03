@@ -2,7 +2,7 @@
   import { apiHandler } from '$lib/client';
   import { Form, Input, Button } from '$lib/components';
 
-  let email: string, password: string;
+  let name: string, password: string;
   const handleSave = async () => {
     const params = { email, password };
     await apiHandler({
@@ -16,7 +16,7 @@
 
 <div class="form">
   <Form title="サインイン" --width-px="700px">
-    <Input title="メールアドレス" type="email" bind:value={email} />
+    <Input title="メールアドレス" type="name" bind:value={name} />
     <Input title="パスワード" type="password" bind:value={password} />
     <div class="btn">
       <Button on:save={handleSave} label="ログインする" />

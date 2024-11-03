@@ -3,7 +3,6 @@ import { writable } from 'svelte/store';
 export type UserType = {
   userId?: number;
   name?: string;
-  email?: string;
 };
 
 function createUser() {
@@ -16,7 +15,6 @@ function createUser() {
         return {
           userId: params.userId || v.userId,
           name: params.name || v.name,
-          email: params.email || v.email,
         };
       }),
     reset: () => set({}),

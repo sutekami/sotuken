@@ -1,12 +1,15 @@
-import { Issue, IssueSection, IssueSectionalOption } from "@prisma/client";
-import { CreateUsecase as CreateIssueUsecase } from "usecase/Issue/CreateUsecase";
-import { CreateUsecase as CreateIssueSectionUsecase } from "usecase/IssueSection/CreateUsecase";
-import { CreateUsecase as CreateIssueSectionalOptionUsecase } from "usecase/IssueSectionalOption/CreateUsecase";
+import { Issue, IssueSection, IssueSectionalOption } from '@prisma/client';
+import { CreateUsecase as CreateIssueUsecase } from 'usecase/Issue/CreateUsecase';
+import { CreateUsecase as CreateIssueSectionUsecase } from 'usecase/IssueSection/CreateUsecase';
 
 export class IssueController implements IController {
-  private params: Issue & { issueSections: Array<IssueSection & { issueSectionalOptions: Array<IssueSectionalOption> }> };
+  private params: Issue & {
+    issueSections: Array<IssueSection & { issueSectionalOptions: Array<IssueSectionalOption> }>;
+  };
 
-  constructor(params: Issue & { issueSections: Array<IssueSection & { issueSectionalOptions: Array<IssueSectionalOption> }> }) {
+  constructor(
+    params: Issue & { issueSections: Array<IssueSection & { issueSectionalOptions: Array<IssueSectionalOption> }> },
+  ) {
     this.params = params;
   }
 
