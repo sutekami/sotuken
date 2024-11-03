@@ -2,8 +2,6 @@ const BASE_URL = `http://express:3000`;
 const BASE_API_URL = '/api';
 const BASE_INIT: Record<string, any> = {
   credentials: 'include',
-  'Content-type': 'application/json',
-  'X-Request_With': 'XMLHttpRequest',
 };
 
 export const COOKIE_SESSION_ID = '_session_id';
@@ -11,6 +9,8 @@ export const COOKIE_SESSION_ID = '_session_id';
 export function headers(sessionId?: string) {
   return new Headers({
     Cookie: sessionId ? '_session_id=' + sessionId : '',
+    'Content-type': 'application/json',
+    'X-Request_With': 'XMLHttpRequest',
   });
 }
 
