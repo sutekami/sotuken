@@ -1,7 +1,7 @@
 import { COOKIE_SESSION_ID, Req } from '$lib/request/index.js';
 import { env } from '$env/dynamic/private';
 
-export async function load({ cookies }) {
+export async function load({ fetch, cookies }) {
   const sessionId = cookies.get(COOKIE_SESSION_ID);
 
   let user;

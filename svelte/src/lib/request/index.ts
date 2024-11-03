@@ -1,15 +1,15 @@
 const BASE_URL = `http://express:3000`;
 const BASE_API_URL = '/api';
-const BASE_INIT: RequestInit = {
+const BASE_INIT: Record<string, any> = {
   credentials: 'include',
+  'Content-type': 'application/json',
+  'X-Request_With': 'XMLHttpRequest',
 };
 
 export const COOKIE_SESSION_ID = '_session_id';
 
 export function headers(sessionId?: string) {
   return new Headers({
-    'Content-type': 'application/json',
-    'X-Request_With': 'XMLHttpRequest',
     Cookie: sessionId ? '_session_id=' + sessionId : '',
   });
 }
@@ -59,6 +59,15 @@ export const Req = {
   signup: {
     POST: (params: string) =>
       new Request(joinUrl(BASE_URL, 'signup'), {
+        ...BASE_INIT,
+        method: 'POST',
+        body: params,
+      }),
+  },
+  signin: {
+    POST: (params: string) =>
+      new Request(joinUrl(BASE_URL, 'signin'), {
+        ...BASE_INIT,
         method: 'POST',
         body: params,
       }),
@@ -86,6 +95,14 @@ export const Req = {
             }),
         },
       },
+    },
+    signin: {
+      POST: (params: string) =>
+        new Request(joinUrl(BASE_API_URL, 'signin'), {
+          ...BASE_INIT,
+          method: 'POST',
+          body: params,
+        }),
     },
   },
 };

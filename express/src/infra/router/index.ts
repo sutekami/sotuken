@@ -18,6 +18,9 @@ router.route('/session').get(async (req, res, next) => {
   const { session } = req;
   if (session.userId) {
     const user = await bundle.UserRepository.find(session.userId);
+    if (!!user) {
+      await new bundle.SignInController(user, session).handle();
+    }
     res.status(200).json(user);
   } else res.status(403).send('nothing');
 });

@@ -1,11 +1,21 @@
 import Client from '$lib/client/index.js';
 
-export async function POST({ request }) {
+export async function POST({ fetch, request }) {
   const res = await new Client(Client.SERVER, {
     url: '/signin',
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify(await request.json()),
-  }).fetch()
+  });
 
-  return res;
+  return await fetch(res.request);
+
+  // return res;
 }
+
+// import { Req } from '$lib/request/index';
+
+// export async function POST({ fetch, request }) {
+//   const body = JSON.stringify(await request.json());
+//   const req = Req.signin.POST(body);
+//   return await fetch(req);
+// }

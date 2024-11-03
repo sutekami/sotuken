@@ -1,23 +1,18 @@
 <script lang="ts">
-  import { Form, Input, Button } from "$lib/components";
-  import Client from "$lib/client";
+  import { Form, Input, Button } from '$lib/components';
+  import { Req } from '$lib/request';
 
-  let email: string, password: string;
+  let name: string, password: string;
   const handleSave = async () => {
-    const params = { email, password }
-    const res = await new Client(Client.CLIENT, {
-      url: '/api/signin',
-      method: "POST",
-      body: JSON.stringify(params),
-    }).fetch();
-
-    location.href = '/mypage';
+    const params = { name, password };
+    const req = Req.api.signin.POST(JSON.stringify(params));
+    await fetch(req).then(() => (location.href = '/mypage'));
   };
 </script>
 
 <div class="form">
   <Form title="サインイン" --width-px="700px">
-    <Input title="メールアドレス" type="email" bind:value={email} />
+    <Input title="メールアドレス" type="name" bind:value={name} />
     <Input title="パスワード" type="password" bind:value={password} />
     <div class="btn">
       <Button on:save={handleSave} label="ログインする" />
