@@ -44,6 +44,7 @@
   };
 
   const handleClickSubmit = async () => {
+    // これだとnullを許容してしまうので、nullは送らないようにする
     const issueSections = issueCreatable.issueSections.map(section => {
       const options = section.issueSectionalOptions.map(option => ({ body: option.body }));
       return { title: section.title, issueSectionalOptions: options };
