@@ -70,7 +70,7 @@ const parseCookie = (socket: Socket) => {
 };
 
 export function webSocketRouter(socket: Socket, io: Server) {
-  socket.on('host:connect', async (userId: string) => {
+  socket.on('host:connect', async (userId?: string) => {
     const roomId = parseCookie(socket)['room_id']!;
     const sessionId = parseCookie(socket)['_session_id']!;
     socket.join(roomId);
@@ -82,10 +82,13 @@ export function webSocketRouter(socket: Socket, io: Server) {
       value = setValue(value, { hostUsers });
     }
 
+    let issues;
     // NOTE: Issuesをfetch
-    const issues = await bundle.IssueRepository.where({
-      userId: parseInt(userId),
-    });
+    if (!!userId) {
+      issues = await bundle.IssueRepository.where({
+        userId: parseInt(userId),
+      });
+    }
     value = setValue(value, { issues });
 
     setRoomValue({ roomId, value });

@@ -5,6 +5,7 @@ import Table from './Table.svelte';
 import TableRow from './TableRow.svelte';
 import TableCell from './TableCell.svelte';
 import Divider from './Divider.svelte';
+import Messenger from './Messenger.svelte';
 
 export {
   Input as BaseInput,
@@ -14,6 +15,7 @@ export {
   TableRow as BaseTableRow,
   TableCell as BaseTableCell,
   Divider as BaseDivider,
+  Messenger as BaseMessenger,
 };
 
 // TODO: css専用の定数を用意したい

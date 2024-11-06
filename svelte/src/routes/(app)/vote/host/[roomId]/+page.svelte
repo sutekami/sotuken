@@ -142,6 +142,10 @@
       </div>
     </div>
   {/if}
+
+  <div class="messenger">
+    <BaseMessenger></BaseMessenger>
+  </div>
 </div>
 
 <style lang="scss">
