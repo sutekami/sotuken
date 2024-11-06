@@ -11,3 +11,5 @@ yarn_express:
 	$(DOCKER_COMPOSE) run --rm express bash -lc 'yarn'
 yarn_svelte:
 	$(DOCKER_COMPOSE) run --rm svelte bash -lc 'yarn'
+enter-svelte:
+	$(DOCKER_COMPOSE) run --rm svelte bash
