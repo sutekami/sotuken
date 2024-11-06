@@ -1,4 +1,5 @@
 import { IssueSectionalOptionClass } from './IssueSectionalOptionClass';
+import sha256 from 'crypto-js/sha256';
 
 export class IssueSectionClass {
   private _title: string = '';
@@ -6,7 +7,7 @@ export class IssueSectionClass {
   private _issueSectionalOptions: IssueSectionalOptionClass[] = [];
 
   constructor() {
-    this._hash = crypto.randomUUID();
+    this._hash = sha256(new Date().toDateString() + Math.random().toString()).toString()
   }
 
   get title(): string {

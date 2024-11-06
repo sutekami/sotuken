@@ -1,7 +1,11 @@
-import { Req } from "$lib/request/index.ts";
+import { apiHandler } from "$lib/client/index";
 
-export async function POST({ fetch, request }) {
-  const params = JSON.stringify(await request.json());
-  const req = Req.signup.POST(params);
-  return await fetch(req);
+export async function POST({ fetch, request, cookies }) {
+  return await apiHandler({
+    uri: '/signup',
+    method: 'POST',
+    to: 'server',
+    cookies,
+    body: (await request.json()),
+  })
 }

@@ -1,3 +1,4 @@
+import { DOMAIN_NAME, SERVER_PORT } from '$env/static/private';
 import { COOKIE_SESSION_ID, Req } from '$lib/request';
 import { error, redirect } from '@sveltejs/kit';
 
@@ -11,6 +12,8 @@ export async function load({ fetch, params, cookies }) {
     cookies.set('room_id', params.roomId, { path: '/' });
     return {
       sessionId,
+      DOMAIN_NAME,
+      SERVER_PORT,
     };
   }
 

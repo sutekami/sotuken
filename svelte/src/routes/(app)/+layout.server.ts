@@ -1,4 +1,3 @@
-import { env } from '$env/dynamic/private';
 import { apiHandler } from '$lib/client/index.js';
 import { parse } from 'cookie';
 
@@ -35,5 +34,5 @@ export async function load({ cookies }) {
     cookies.set(name!, value!, options);
   });
 
-  return { env, user };
+  return { user };
 }

@@ -13,3 +13,7 @@ yarn_svelte:
 	$(DOCKER_COMPOSE) run --rm svelte bash -lc 'yarn'
 enter-svelte:
 	$(DOCKER_COMPOSE) run --rm svelte bash
+enter-express:
+	$(DOCKER_COMPOSE) run --rm express bash
+build_vite:
+	$(DOCKER_COMPOSE) run --rm svelte bash -lc 'yarn vite build'

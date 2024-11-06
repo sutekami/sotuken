@@ -3,14 +3,18 @@
   import Input from '$lib/components/Input.svelte';
   import Form from '$lib/components/Form.svelte';
   import Button from '$lib/components/Button.svelte';
+  import { apiHandler } from '$lib/client';
 
-  let name: string, email: string, password: string;
+  let name: string, password: string;
 
   const handleSave = async () => {
-    let params: Record<string, string>;
-    params = { name, email, password };
-    await api.signup
-      .create({ params })
+    const body = { name, password };
+    await apiHandler({
+      method: 'POST',
+      to: 'api',
+      uri: '/signup',
+      body,
+    })
       .then(() => {
         location.href = '/mypage';
       })
@@ -23,7 +27,6 @@
 <div class="form">
   <Form title="サインアップ" on:save={handleSave} --width-px="700px">
     <Input title="ユーザー名" bind:value={name} />
-    <Input title="メールアドレス" type="email" bind:value={email} />
     <Input title="パスワード" type="password" bind:value={password} />
     <div class="btn">
       <Button on:save={handleSave} label="登録する" />
