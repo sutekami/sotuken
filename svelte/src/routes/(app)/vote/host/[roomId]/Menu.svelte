@@ -6,8 +6,6 @@
   const dispatch = createEventDispatcher<{
     copy: null;
     start: null;
-    debug: null;
-    reset: null;
     select: number;
   }>();
 
@@ -25,8 +23,6 @@
 <div class="btns">
   <BaseButton hoverColor="_blue" on:click={() => dispatch('copy')}>ゲストユーザーを招待する</BaseButton>
   <BaseButton hoverColor="_purple" on:click={() => dispatch('start')}>投票を始める</BaseButton>
-  <BaseButton hoverColor="_indigo" on:click={() => dispatch('debug')}>デバッグ用ボタン</BaseButton>
-  <BaseButton on:click={() => dispatch('reset')}>リセット</BaseButton>
 </div>
 
 <div>

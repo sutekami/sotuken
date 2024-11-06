@@ -153,7 +153,6 @@
       align-items: center;
       justify-content: center;
     }
-
     .vote {
       & {
         display: flex;

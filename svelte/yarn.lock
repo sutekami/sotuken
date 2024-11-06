@@ -463,6 +463,11 @@ cookie@^0.6.0:
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.6.0.tgz#2798b04b071b0ecbff0dbb62a505a8efa4e19051"
   integrity sha512-U71cyTamuh1CRNCfpGY6to28lxvNwPG4Guz/EVjgf3Jmzv0vlDp1atT9eS5dDjMYHucpHbWns6Lwf3BKz6svdw==
 
+cookie@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/cookie/-/cookie-1.0.1.tgz#e1a00d20420e0266aff817815640289eef142751"
+  integrity sha512-Xd8lFX4LM9QEEwxQpF9J9NTUh8pmdJO0cyRJhFiDoLTk2eH8FXlRv2IFGYVadZpqI3j8fhNrSdKCeYPxiAhLXw==
+
 cookie@~0.4.1:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.4.2.tgz#0e41f24de5ecf317947c82fc789e06a884824432"
@@ -727,6 +732,11 @@ locate-character@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/locate-character/-/locate-character-3.0.0.tgz#0305c5b8744f61028ef5d01f444009e00779f974"
   integrity sha512-SW13ws7BjaeJ6p7Q6CO2nchbYEc3X3J6WrmTTDto7yMPqVSZTUyY5Tjbid+Ab8gLnATtygYtiDIJGQRRn2ZOiA==
+
+lucide-svelte@^0.454.0:
+  version "0.454.0"
+  resolved "https://registry.yarnpkg.com/lucide-svelte/-/lucide-svelte-0.454.0.tgz#5d154c1c05f6caa8dce14589c5d69cf55bc39873"
+  integrity sha512-TgW17HI7M8LeFZ3NpaDp1LwPGBGMVjx/x81TtK+AacEQvmJcqetqeJNeBT18NMEJP9+zi/Wt+Zc8mo44K5Uszw==
 
 magic-string@^0.30.10, magic-string@^0.30.4, magic-string@^0.30.5:
   version "0.30.11"
