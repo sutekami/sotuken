@@ -1,18 +1,6 @@
 <script lang="ts">
-  import { storeUser } from '$lib/store/user.js';
-  import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { Req } from '$lib/request/index.ts';
-  import { page } from '$app/stores';
-
-  onMount(() => {
-    if ($page.data.user) {
-      const { email, name, userId } = $page.data.user;
-      storeUser.updateUser({ email, name, userId });
-    } else {
-      goto('/signin');
-    }
-  });
 
   async function createRoom() {
     const req = Req.api.vote.GET();

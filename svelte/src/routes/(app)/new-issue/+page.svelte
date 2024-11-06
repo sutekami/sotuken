@@ -46,7 +46,7 @@
   const handleClickSubmit = async () => {
     // これだとnullを許容してしまうので、nullは送らないようにする
     const issueSections = issueCreatable.issueSections.map(section => {
-      const options = section.issueSectionalOptions.map(option => ({ body: option.body }));
+      const options = section.issueSectionalOptions.map(option => ({ body: option.body })).filter(body => !!body);
       return { title: section.title, issueSectionalOptions: options };
     });
 
@@ -57,9 +57,7 @@
     };
 
     const req = Req.api.new_issue.POST(JSON.stringify(issue));
-    const res = await fetch(req);
-
-    console.log(res);
+    await fetch(req);
   };
 </script>
 

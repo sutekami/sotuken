@@ -6,7 +6,7 @@
   import { storeIssueSection } from '$lib/store/issue_section';
   import { page } from '$app/stores';
   import Menu from './Menu.svelte';
-  import { BaseButton, BaseTable, BaseTableCell, BaseTableRow } from '$lib/components';
+  import { BaseButton, BaseMessenger, BaseTable, BaseTableCell, BaseTableRow } from '$lib/components';
   const { env, roomId } = $page.data;
 
   const socket = io(`ws://localhost:${env.SERVER_PORT}`, {

@@ -1,3 +1,16 @@
+<script lang="ts">
+  import { onMount } from 'svelte';
+  import { page } from '$app/stores';
+  import { storeUser } from '../../lib/store/user';
+
+  onMount(() => {
+    if ($page.data.user) {
+      const { name, userId } = $page.data.user;
+      storeUser.updateUser({ name, userId });
+    }
+  });
+</script>
+
 <!-- meta data! -->
 <svelte:head>
   <title>Vote App</title>
