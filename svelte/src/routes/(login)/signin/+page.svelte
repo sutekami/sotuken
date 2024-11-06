@@ -5,12 +5,17 @@
   let name: string, password: string;
   const handleSave = async () => {
     const params = { name, password };
-    await apiHandler({
+
+    const res = await apiHandler({
       method: 'POST',
       to: 'api',
       uri: '/signin',
       body: params,
-    }).then(() => (location.href = '/mypage'));
+    });
+
+    if (res.ok) {
+      location.href = '/mypage';
+    }
   };
 </script>
 

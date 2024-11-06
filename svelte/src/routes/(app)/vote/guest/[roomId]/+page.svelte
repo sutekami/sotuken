@@ -6,8 +6,9 @@
   import { BaseButton, BaseRadio } from '$lib/components';
   import Chart from 'chart.js/auto';
   import type { IssueSectionalOptionType } from '$lib/store/issue_sectional_option';
+  export let data;
 
-  const socket = io(`ws://localhost:${$page.data.SERVER_PORT}`, {
+  const socket = io(`ws://${data.DOMAIN_NAME}:${data.SERVER_PORT}`, {
     withCredentials: true,
   });
   let guestName: string;
