@@ -2,11 +2,17 @@
   import { BaseButton, BaseInput } from '$lib/components';
   import { randomGuestNames } from './randomGuestNames';
   import { Req } from '$lib/request';
+  import { onMount } from 'svelte';
 
-  const params = new URLSearchParams(location.search);
-  const roomId = params.get('roomId');
+  let params: URLSearchParams;
+  let roomId: string | null;
+  let guestName: string = '';
 
-  let guestName = randomGuestNames[Math.floor(Math.random() * randomGuestNames.length)];
+  onMount(() => {
+    params = new URLSearchParams(location.search);
+    roomId = params.get('roomId');
+    guestName = randomGuestNames[Math.floor(Math.random() * randomGuestNames.length)];
+  });
 
   const handleClickEmitGuestConnect = async () => {
     guestName ||= randomGuestNames[Math.floor(Math.random() * randomGuestNames.length)];
@@ -14,7 +20,7 @@
       guestName,
     });
     const req = Req.api.vote.guest.roomId.POST(roomId || '', params);
-    await fetch(req).then(d => (location.href = `/vote/guest/${roomId}`));
+    await fetch(req).then(() => (location.href = `/vote/guest/${roomId}`));
   };
 </script>
 
