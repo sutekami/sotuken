@@ -9,5 +9,7 @@ export async function load({ cookies }) {
     cookies,
   });
 
-  if (res.status !== 200) redirect(302, '/signin');
+  if (res.status !== 200) {
+    redirect(302, '/signin');
+  }
 }

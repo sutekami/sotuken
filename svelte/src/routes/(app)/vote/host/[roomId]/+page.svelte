@@ -5,8 +5,9 @@
   import { storeIssues } from '$lib/store/issue.ts';
   import { storeIssueSection } from '$lib/store/issue_section';
   import { page } from '$app/stores';
-  import Menu from './Menu.svelte';
-  import { BaseButton, BaseMessenger, BaseTable, BaseTableCell, BaseTableRow } from '$lib/components';
+  import { BaseButton, BaseRadio, BaseTable, BaseTableCell, BaseTableRow } from '$lib/components';
+  import Chart from 'chart.js/auto';
+  import type { IssueSectionalOptionType } from '$lib/store/issue_sectional_option';
   const { env, roomId } = $page.data;
 
   const socket = io(`ws://localhost:${env.SERVER_PORT}`, {
@@ -19,6 +20,8 @@
   let voteStatus: Record<string, number> = {};
   let selectedIssueId: number;
   let isAbleDisclose: boolean = false;
+  let myChart: Chart;
+  let canvasCtx: HTMLCanvasElement;
 
   onMount(async () => {
     const { name, userId } = $page.data.user;
@@ -49,10 +52,6 @@
     socket.emit('host:start_vote', selectedIssueId);
   };
 
-  const handleClickReset = () => {
-    location.href = '/vote';
-  };
-
   const handleSelectIssueId = (e: CustomEvent<number>) => {
     selectedIssueId = e.detail;
   };
@@ -79,16 +78,46 @@
   const handleClickEmitNextVote = () => {
     socket.emit('host:next_vote');
   };
+
+  const drawVoteResultGraph = async (options?: IssueSectionalOptionType[]) => {
+    if (!options) return;
+
+    const data: Record<number, number> = {};
+
+    for (let i in voteStatus) {
+      data[voteStatus[i]] = (data[voteStatus[i]] ?? 0) + 1;
+    }
+
+    myChart?.destroy();
+
+    myChart = new Chart(canvasCtx, {
+      type: 'bar',
+      options: {
+        animation: false,
+      },
+      data: {
+        labels: options.map(opt => opt.body),
+        datasets: [
+          {
+            label: '投票結果',
+            data: options.map(opt => {
+              const optId = opt.issueSectionalOptionId ?? 0;
+              return data[optId];
+            }),
+          },
+        ],
+      },
+    });
+  };
+
+  $: {
+    if (!!canvasCtx && inResult) {
+      drawVoteResultGraph($storeIssueSection.issueSectionalOptions);
+    }
+  }
 </script>
 
 <div class="vote-host-page">
-  <Menu
-    on:copy={handleClickCopy}
-    on:start={handleClickEmitStartVote}
-    on:reset={handleClickReset}
-    on:select={handleSelectIssueId}
-    {selectedIssueId}
-  />
   {#if inVoting}
     <div class="vote">
       <div class="btn">
@@ -113,15 +142,31 @@
         </svelte:fragment>
       </BaseTable>
       {#if inResult}
+        <canvas bind:this={canvasCtx} />
         <div class="btn">
           <BaseButton on:click={handleClickEmitNextVote}>次の投票へ移る</BaseButton>
         </div>
       {/if}
     </div>
-  {:else if inResult}
-    <div class="result"></div>
   {:else}
     <div class="home">
+      <div class="menu">
+        <BaseButton on:click={handleClickCopy}>招待コードをコピー</BaseButton>
+        <BaseButton on:click={handleClickEmitStartVote}>投票を始める</BaseButton>
+      </div>
+      <div class="issues">
+        {#each $storeIssues ?? [] as issue}
+          <BaseRadio
+            name="issue"
+            value={`${issue.issueId}`}
+            id="issue_id_{issue.issueId}"
+            on:click={e => (selectedIssueId = parseInt(e.detail))}
+            selectedValue={`${selectedIssueId}`}
+          >
+            {issue.title}
+          </BaseRadio>
+        {/each}
+      </div>
       <div class="table">
         <BaseTable>
           <svelte:fragment slot="thead">
@@ -142,10 +187,6 @@
       </div>
     </div>
   {/if}
-
-  <div class="messenger">
-    <BaseMessenger></BaseMessenger>
-  </div>
 </div>
 
 <style lang="scss">
@@ -171,6 +212,20 @@
         padding: 8px;
         display: flex;
         justify-content: center;
+      }
+    }
+    .home {
+      .menu {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .issues {
+        padding: 20px 0;
+      }
+
+      .table {
+        padding: 20px 0;
       }
     }
   }

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy, onMount } from 'svelte';
+  import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { io } from 'socket.io-client';
   import { storeIssueSection } from '$lib/store/issue_section';
@@ -84,7 +84,7 @@
   <div class="content">
     {#if inVoting}
       {#if inResult}
-        <canvas bind:this={canvasCtx}></canvas>
+        <canvas bind:this={canvasCtx} />
       {:else}
         <div class="in-voting">
           <div class="vote">
