@@ -19,7 +19,7 @@ router.route('/session').get(async (req, res, next) => {
     }
     res.status(200).json(user);
   } else {
-    res.sendStatus(403);
+    res.sendStatus(204);
   }
 });
 
