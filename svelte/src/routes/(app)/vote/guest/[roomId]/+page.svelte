@@ -7,7 +7,7 @@
   import Chart from 'chart.js/auto';
   import type { IssueSectionalOptionType } from '$lib/store/issue_sectional_option';
 
-  const socket = io(`ws://localhost:${$page.data.env.SERVER_PORT}`, {
+  const socket = io(`ws://localhost:${$page.data.SERVER_PORT}`, {
     withCredentials: true,
   });
   let guestName: string;

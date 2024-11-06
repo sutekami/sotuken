@@ -8,9 +8,9 @@
   import { BaseButton, BaseRadio, BaseTable, BaseTableCell, BaseTableRow } from '$lib/components';
   import Chart from 'chart.js/auto';
   import type { IssueSectionalOptionType } from '$lib/store/issue_sectional_option';
-  const { env, roomId } = $page.data;
+  const { SERVER_PORT, CLIENT_PORT, DOMAIN_NAME, roomId } = $page.data;
 
-  const socket = io(`ws://localhost:${env.SERVER_PORT}`, {
+  const socket = io(`ws://${DOMAIN_NAME}:${SERVER_PORT}`, {
     withCredentials: true,
   });
 
@@ -43,7 +43,7 @@
   });
 
   const handleClickCopy = async () => {
-    const writeText = `${location.protocol}//${location.hostname}:${env.CLIENT_PORT}/vote/guest/${roomId}`;
+    const writeText = `${location.protocol}//${location.hostname}:${CLIENT_PORT}/vote/guest/${roomId}`;
     navigator.clipboard.writeText(writeText);
   };
 

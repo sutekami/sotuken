@@ -1,4 +1,4 @@
-import { env } from '$env/dynamic/private';
+import { CLIENT_PORT, SERVER_PORT, DOMAIN_NAME } from '$env/static/private';
 import { apiHandler } from '$lib/client/index.js';
 import { parse } from 'cookie';
 
@@ -35,5 +35,5 @@ export async function load({ cookies }) {
     cookies.set(name!, value!, options);
   });
 
-  return { env, user };
+  return { CLIENT_PORT, SERVER_PORT, DOMAIN_NAME, user };
 }
