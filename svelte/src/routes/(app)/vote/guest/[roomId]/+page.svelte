@@ -8,7 +8,7 @@
   import type { IssueSectionalOptionType } from '$lib/store/issue_sectional_option';
   export let data;
 
-  const socket = io(`ws://${data.DOMAIN_NAME}:${data.SERVER_PORT}`, {
+  const socket = io(`http://${data.DOMAIN_NAME}:${data.SERVER_PORT}`, {
     withCredentials: true,
   });
   let guestName: string;
