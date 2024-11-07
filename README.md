@@ -8,3 +8,5 @@ CLIENT_PORT=
 CLIENT_SERVER=
 DOMAIN_NAME=
 ```
+
+2. AWSでインスタンスを停止すると、パブリックIPアドレスが変更されるので、都度DOMAIN_NAMEを変更する必要がある
