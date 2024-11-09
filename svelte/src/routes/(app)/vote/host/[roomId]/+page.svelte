@@ -8,9 +8,9 @@
   import { BaseButton, BaseRadio, BaseTable, BaseTableCell, BaseTableRow } from '$lib/components';
   import Chart from 'chart.js/auto';
   import type { IssueSectionalOptionType } from '$lib/store/issue_sectional_option';
-  const { SERVER_PORT, CLIENT_PORT, roomId } = $page.data;
+  const { SERVER_PORT, CLIENT_PORT, DOMAIN_NAME, roomId } = $page.data;
 
-  const socket = io(`http://${location.hostname}:${SERVER_PORT}`, {
+  const socket = io(`http://${DOMAIN_NAME}:${SERVER_PORT}`, {
     withCredentials: true,
   });
 
