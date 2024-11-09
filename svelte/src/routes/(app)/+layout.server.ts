@@ -14,7 +14,7 @@ export async function load({ cookies }) {
 
   res.headers.getSetCookie().forEach(cookie => {
     const parsedCookie = parse(cookie);
-    let options: { path: string; expires?: Date, secure: boolean } = {
+    let options: { path: string; expires?: Date; secure: boolean } = {
       path: '/',
       secure: false,
     };
