@@ -12,12 +12,13 @@ services:
     command: yarn run dev
     env_file:
       - ./.env
+    # restart: always
   svelte:
     build: ./svelte
     volumes:
       - ./svelte:/usr/src/app
     ports:
-      - "8080:5173"
+      - "80:5173"
     tty: true
     depends_on:
       - mysql
@@ -26,6 +27,7 @@ services:
     command: npm run dev -- --force
     env_file:
       - ./.env
+    # restart: always
   mysql:
     build: ./mysql
     ports:
@@ -36,9 +38,11 @@ services:
     tty: true
     environment:
       MYSQL_ROOT_PASSWORD: root
+    # restart: always
   redis:
     image: "redis:latest"
     ports:
       - "6379:6379"
     volumes:
       - "./radis/.data:/data"
+    # restart: always

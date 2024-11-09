@@ -1,5 +1,5 @@
-DOCKER_COMPOSE = sudo docker-compose
-DOCKER_PS = sudo docker-compose ps -q
+DOCKER_COMPOSE = sudo docker compose
+DOCKER_PS = sudo docker compose ps -q
 
 migrate:
 	$(DOCKER_COMPOSE) run --rm express bash -lc 'yarn prisma migrate dev'
