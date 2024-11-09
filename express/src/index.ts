@@ -19,7 +19,7 @@ const server = createServer(app);
 const port = process.env.SERVER_PORT;
 const io = new Server(server, {
   cors: {
-    origin: `http://${process.env.DOMAIN_NAME}:${process.env.CLIENT_PORT}`,
+    origin: `http://${process.env.DOMAIN_NAME}:${process.env.SERVER_PORT}`,
     credentials: true,
   },
 });
@@ -42,7 +42,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', `http://${process.env.DOMAIN_NAME}:${process.env.CLIENT_PORT}`);
+  res.header('Access-Control-Allow-Origin', `http://${process.env.DOMAIN_NAME}`);
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
   res.header('Access-Control-Allow-Headers', 'Content-Type, x-request_with, XMLHttpRequest');
   res.header('Access-Control-Allow-Credentials', 'true');
