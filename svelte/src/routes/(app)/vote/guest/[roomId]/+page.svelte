@@ -10,6 +10,7 @@
 
   const socket = io(`http://${data.DOMAIN_NAME}:${data.SERVER_PORT}`, {
     withCredentials: true,
+    secure: false,
   });
   let guestName: string;
   let inVoting: boolean;
