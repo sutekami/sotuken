@@ -12,7 +12,6 @@
 
   const socket = io(`http://${DOMAIN_NAME}:${SERVER_PORT}`, {
     withCredentials: true,
-    secure: false,
   });
 
   let inVoting: boolean;

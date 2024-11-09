@@ -9,7 +9,7 @@ export async function load({ fetch, params, cookies }) {
   const statusCode = res.status;
 
   if (res.ok) {
-    cookies.set('room_id', params.roomId, { path: '/' });
+    cookies.set('room_id', params.roomId, { path: '/', secure: false });
     return {
       sessionId,
       DOMAIN_NAME,
