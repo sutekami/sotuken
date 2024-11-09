@@ -19,7 +19,7 @@ const server = createServer(app);
 const port = process.env.SERVER_PORT;
 const io = new Server(server, {
   cors: {
-    origin: `http://${process.env.DOMAIN_NAME}:${process.env.SERVER_PORT}`,
+    origin: `http://${process.env.DOMAIN_NAME}`,
     credentials: true,
   },
 });
