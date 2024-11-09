@@ -17,3 +17,5 @@ enter-express:
 	$(DOCKER_COMPOSE) run --rm express bash
 build_vite:
 	$(DOCKER_COMPOSE) run --rm svelte bash -lc 'yarn vite build'
+build_express:
+	$(DOCKER_COMPOSE) run --rm express bash -lc 'yarn webpack --config ./webpack.config.js'
