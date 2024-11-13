@@ -39,7 +39,7 @@
     & {
       margin: 0 auto;
       padding: 24px;
-      max-width: 30vw;
+      max-width: 1100px;
       display: flex;
       justify-content: center;
       flex-direction: column;

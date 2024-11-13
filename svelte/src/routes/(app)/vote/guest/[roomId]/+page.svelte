@@ -155,7 +155,7 @@
       display: block;
     }
     .table {
-      min-width: 10vw;
+      min-width: 150px;
     }
     .content {
       & {
