@@ -36,5 +36,7 @@ export async function load({ cookies }) {
     cookies.set(name!, value!, options);
   });
 
-  return { CLIENT_PORT, SERVER_PORT, DOMAIN_NAME, user };
+  const SESSION_ID = cookies.get('_session_id');
+
+  return { CLIENT_PORT, SERVER_PORT, DOMAIN_NAME, SESSION_ID, user };
 }

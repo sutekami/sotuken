@@ -19,7 +19,7 @@
       border: 2px solid rgb(140 140 140);
       font-size: 0.8rem;
       letter-spacing: 1px;
-      min-width: 30vw;
+      width: 100%;
     }
 
     .thead,

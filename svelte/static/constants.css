@@ -6,7 +6,7 @@
 
 body {
   margin: 0;
-  font-family: "Noto Sans JP", sans-serif;
+  font-family: Hack, monospace, 'Noto Sans JP', sans-serif;
   font-weight: 400;
   font-style: normal;
 }
@@ -58,16 +58,16 @@ a:hover {
 
   10% {
     opacity: 1;
-    top: 20px
+    top: 20px;
   }
 
   90% {
     opacity: 1;
-    top: 20px
+    top: 20px;
   }
 
   100% {
     opacity: 0;
-    top: -100px
+    top: -100px;
   }
 }

@@ -3,7 +3,7 @@
   import { page } from '$app/stores';
   import { io } from 'socket.io-client';
   import { storeIssueSection } from '$lib/store/issue_section';
-  import { BaseButton, BaseRadio } from '$lib/components';
+  import { BaseButton, BaseRadio, BaseTable, BaseTableCell, BaseTableRow } from '$lib/components';
   import Chart from 'chart.js/auto';
   import type { IssueSectionalOptionType } from '$lib/store/issue_sectional_option';
   export let data;
@@ -14,6 +14,7 @@
   let guestName: string;
   let inVoting: boolean;
   let inResult: boolean;
+  let guestUsers: any[] = [];
   let voteStatus: Record<string, number> = {};
   let selectedOptionId: number;
   let myChart: Chart;
@@ -23,6 +24,7 @@
     guestName = v.guestUsers?.find(e => e.hash === $page.data.sessionId)?.guestName;
     inVoting = v.inVoting;
     inResult = v.inResult;
+    guestUsers = [...(v.guestUsers ?? [])];
     voteStatus = v.voteStatus ?? {};
   });
 
@@ -40,6 +42,17 @@
 
   const handleClickSubmit = () => {
     socket.emit('guest:vote', selectedOptionId);
+  };
+
+  const displayGuestAnswer = (status: Record<string, number>) => {
+    const answeredIssueSectinalOptionId = status[data.SESSION_ID ?? ''];
+    if (!answeredIssueSectinalOptionId) {
+      return '未回答';
+    }
+    const option = $storeIssueSection.issueSectionalOptions?.find(
+      e => e.issueSectionalOptionId === answeredIssueSectinalOptionId,
+    );
+    return !!option ? option.body : '未回答';
   };
 
   const drawVoteResultGraph = async (options?: IssueSectionalOptionType[]) => {
@@ -81,7 +94,7 @@
 </script>
 
 <div class="vote-guest-page-room">
-  <p>ユーザー名：{guestName}</p>
+  <p>自分のユーザー名：{guestName}</p>
   <div class="content">
     {#if inVoting}
       {#if inResult}
@@ -106,24 +119,48 @@
             <div class="submit">
               <BaseButton on:click={handleClickSubmit} disabled={!selectedOptionId}>投票する</BaseButton>
             </div>
+            <div class="answer" style="text-align: center;">
+              回答状況：{displayGuestAnswer(voteStatus)}
+            </div>
           </div>
         </div>
       {/if}
     {:else}
-      <p>待機画面</p>
+      <div class="block">
+        <p style="text-align: center;">待機画面</p>
+        <div class="table">
+          <BaseTable>
+            <svelte:fragment slot="thead">
+              <BaseTableRow>
+                <BaseTableCell th>参加者</BaseTableCell>
+              </BaseTableRow>
+            </svelte:fragment>
+            <svelte:fragment slot="tbody">
+              {#each guestUsers.filter(user => user.isActive) as guestUser}
+                <BaseTableRow>
+                  <BaseTableCell th>{guestUser.guestName}</BaseTableCell>
+                </BaseTableRow>
+              {/each}
+            </svelte:fragment>
+          </BaseTable>
+        </div>
+      </div>
     {/if}
   </div>
 </div>
 
 <style lang="scss">
   .vote-guest-page-room {
-    & {
+    .block {
+      display: block;
     }
-
+    .table {
+      min-width: 10vw;
+    }
     .content {
       & {
         margin: 0 auto;
-        max-width: 1100px;
+        max-width: 550px;
         display: flex;
         justify-content: center;
       }

@@ -8,6 +8,7 @@
   import { BaseButton, BaseRadio, BaseTable, BaseTableCell, BaseTableRow } from '$lib/components';
   import Chart from 'chart.js/auto';
   import type { IssueSectionalOptionType } from '$lib/store/issue_sectional_option';
+  import { browser } from '$app/environment';
   const { SERVER_PORT, CLIENT_PORT, DOMAIN_NAME, roomId } = $page.data;
 
   const socket = io(`http://${DOMAIN_NAME}:${SERVER_PORT}`, {
@@ -42,18 +43,16 @@
     storeIssueSection.updateIssueSection(v);
   });
 
-  const handleClickCopy = async () => {
-    const writeText = `${location.protocol}//${location.hostname}:${CLIENT_PORT}/vote/guest/${roomId}`;
-    navigator.clipboard.writeText(writeText);
+  const inviteGuestURL = () => {
+    if (!browser) {
+      return '';
+    }
+    return `${location.protocol}//${location.hostname}:${CLIENT_PORT}/vote/guest/${roomId}`;
   };
 
   const handleClickEmitStartVote = () => {
     if (!selectedIssueId) return alert('投票するテーマを選択してください');
     socket.emit('host:start_vote', selectedIssueId);
-  };
-
-  const handleSelectIssueId = (e: CustomEvent<number>) => {
-    selectedIssueId = e.detail;
   };
 
   const displayGuestAnswer = (sId: string) => {
@@ -151,7 +150,8 @@
   {:else}
     <div class="home">
       <div class="menu">
-        <BaseButton on:click={handleClickCopy}>招待コードをコピー</BaseButton>
+        <h5>招待コード</h5>
+        <div class="content">{inviteGuestURL()}</div>
         <BaseButton on:click={handleClickEmitStartVote}>投票を始める</BaseButton>
       </div>
       <div class="issues">
@@ -219,6 +219,15 @@
         display: flex;
         flex-direction: column;
         gap: 8px;
+        h5 {
+          margin: 0;
+        }
+        .content {
+          background-color: antiquewhite;
+          padding: 10px;
+          font-size: 11px;
+          text-align: center;
+        }
       }
       .issues {
         padding: 20px 0;
