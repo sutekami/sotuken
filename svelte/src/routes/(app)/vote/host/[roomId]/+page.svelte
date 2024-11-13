@@ -9,7 +9,7 @@
   import Chart from 'chart.js/auto';
   import type { IssueSectionalOptionType } from '$lib/store/issue_sectional_option';
   import { browser } from '$app/environment';
-  import QRCode from 'qrcode';
+  import QrCode from 'svelte-qrcode';
   const { SERVER_PORT, CLIENT_PORT, DOMAIN_NAME, roomId } = $page.data;
 
   const socket = io(`http://${DOMAIN_NAME}:${SERVER_PORT}`, {
@@ -24,13 +24,11 @@
   let isAbleDisclose: boolean = false;
   let myChart: Chart;
   let canvasCtx: HTMLCanvasElement;
-  let qrCodeCanvasCtx: HTMLCanvasElement;
 
   onMount(async () => {
     const { name, userId } = $page.data.user;
     storeUser.updateUser({ name, userId });
     socket.emit('host:connect', $storeUser.userId);
-    QRCode.toCanvas(qrCodeCanvasCtx, inviteGuestURL(), {});
   });
 
   socket.on('host:receive_value', v => {
@@ -154,7 +152,7 @@
     <div class="home">
       <div class="menu">
         <h5>招待コード</h5>
-        <canvas bind:this={qrCodeCanvasCtx}></canvas>
+        <QrCode value={inviteGuestURL()} />
         <div class="content">{inviteGuestURL()}</div>
         <BaseButton on:click={handleClickEmitStartVote}>投票を始める</BaseButton>
       </div>
