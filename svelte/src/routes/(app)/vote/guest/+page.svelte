@@ -3,12 +3,14 @@
   import { randomGuestNames } from './randomGuestNames';
   import { Req } from '$lib/request';
   import { onMount } from 'svelte';
+  import { storeConfig } from '$lib/store/config';
 
   let params: URLSearchParams;
   let roomId: string | null;
   let guestName: string = '';
 
   onMount(() => {
+    storeConfig.updateConfig({ availableHeaderMenu: false });
     params = new URLSearchParams(location.search);
     roomId = params.get('roomId');
     guestName = randomGuestNames[Math.floor(Math.random() * randomGuestNames.length)];

@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
-  import { storeUser } from '../../lib/store/user';
+  import { storeUser } from '$lib/store/user';
+  import { storeConfig } from '$lib/store/config';
 
   onMount(() => {
     if ($page.data.user) {
@@ -16,14 +17,16 @@
   <title>Vote App</title>
 </svelte:head>
 
-<header class="header">
-  <nav class="nav">
-    <li><a href="/">Home</a></li>
-    <li><a href="/new-issue">New Issue</a></li>
-    <li><a href="/signin">Sign In</a></li>
-    <li><a href="/vote">vote</a></li>
-  </nav>
-</header>
+{#if $storeConfig.availableHeaderMenu}
+  <header class="header">
+    <nav class="nav">
+      <li><a href="/">Home</a></li>
+      <li><a href="/new-issue">New Issue</a></li>
+      <li><a href="/signin">Sign In</a></li>
+      <li><a href="/vote">vote</a></li>
+    </nav>
+  </header>
+{/if}
 
 <slot></slot>
 

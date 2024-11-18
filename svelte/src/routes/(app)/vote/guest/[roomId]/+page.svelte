@@ -6,6 +6,7 @@
   import { BaseButton, BaseRadio, BaseTable, BaseTableCell, BaseTableRow } from '$lib/components';
   import Chart from 'chart.js/auto';
   import type { IssueSectionalOptionType } from '$lib/store/issue_sectional_option';
+  import { storeConfig } from '$lib/store/config.js';
   export let data;
 
   const socket = io(`http://${data.DOMAIN_NAME}:${data.SERVER_PORT}`, {
@@ -33,6 +34,7 @@
   });
 
   onMount(async () => {
+    storeConfig.updateConfig({ availableHeaderMenu: false });
     socket.emit('guest:connect', $page.params.roomId);
   });
 
@@ -151,6 +153,10 @@
 
 <style lang="scss">
   .vote-guest-page-room {
+    & {
+      max-width: 800px;
+      margin: 0 auto;
+    }
     .block {
       display: block;
     }
