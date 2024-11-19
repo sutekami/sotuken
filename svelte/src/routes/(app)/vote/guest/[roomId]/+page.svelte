@@ -74,7 +74,7 @@
         animation: false,
       },
       data: {
-        labels: options.map(opt => opt.body),
+        labels: options.map(opt => opt.body?.substring(0, 10) + '...'),
         datasets: [
           {
             label: '投票結果',
@@ -140,7 +140,9 @@
             <svelte:fragment slot="tbody">
               {#each guestUsers.filter(user => user.isActive) as guestUser}
                 <BaseTableRow>
-                  <BaseTableCell th>{guestUser.guestName}</BaseTableCell>
+                  <BaseTableCell th>
+                    {data.sessionId === guestUser.hash ? guestUser.guestName + '（自分）' : guestUser.guestName}
+                  </BaseTableCell>
                 </BaseTableRow>
               {/each}
             </svelte:fragment>

@@ -96,7 +96,7 @@
         animation: false,
       },
       data: {
-        labels: options.map(opt => opt.body),
+        labels: options.map(opt => opt.body?.substring(0, 10) + '...'),
         datasets: [
           {
             label: '投票結果',
