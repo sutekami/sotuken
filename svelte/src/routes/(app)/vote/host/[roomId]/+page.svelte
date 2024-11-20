@@ -31,7 +31,8 @@
     socket.emit('host:connect', $storeUser.userId);
   });
 
-  socket.on('host:receive_value', v => {
+  socket.on('host:receive_value', (v, callback) => {
+    callback();
     inVoting = v.inVoting ?? inVoting;
     inResult = v.inResult ?? inResult;
     guestUsers = [...(v.guestUsers ?? [])];

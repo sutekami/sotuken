@@ -42,6 +42,10 @@ function setValue(
   };
 }
 
+const webSocketEmitterCallback = (analyticsSessionId?: string) => {
+  console.log(`callback is called on express server. at, ${new Date().toJSON()}`);
+};
+
 async function emitAllUser({ socket, value, roomId }: { socket: Socket; value: roomType; roomId: string }) {
   if (!!value.currentIssueSectionId) {
     const issueSection = await bundle.IssueSectionRepository.find(value.currentIssueSectionId);
@@ -50,10 +54,13 @@ async function emitAllUser({ socket, value, roomId }: { socket: Socket; value: r
     socket.to(roomId).emit('host:receive_issue_section', issueSection);
     socket.to(roomId).emit('guest:receive_issue_section', issueSection);
   }
-  socket.emit('host:receive_value', value);
-  socket.emit('guest:receive_value', value);
-  socket.to(roomId).emit('host:receive_value', value);
-  socket.to(roomId).emit('guest:receive_value', value);
+  // ここでbeforecallの分析DBへのレコードを保存して、保存したレコードの中にあるsessionIdを取り出し、
+  // emitでsessionIdも一緒に送る
+  console.log(`before emit call. at ${new Date().toJSON()}`);
+  socket.emit('host:receive_value', value, webSocketEmitterCallback);
+  socket.emit('guest:receive_value', value, webSocketEmitterCallback);
+  socket.to(roomId).emit('host:receive_value', value, webSocketEmitterCallback);
+  socket.to(roomId).emit('guest:receive_value', value, webSocketEmitterCallback);
 }
 
 function emitError(socket: Socket, type?: string, msg?: string) {
