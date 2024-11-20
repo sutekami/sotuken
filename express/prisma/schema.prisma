@@ -9,7 +9,7 @@ datasource db {
 
 model User {
   userId    Int      @id @default(autoincrement()) @map("user_id")
-  name     String   @unique
+  name      String   @unique
   password  String
   issues    Issue[]
   createdAt DateTime @default(now()) @map("created_at")
@@ -54,4 +54,15 @@ model IssueSectionalOption {
 
   @@index([issueSectionId])
   @@map("issue_sectional_option")
+}
+
+model WebsocketAnalytics {
+  websocketAnalyticsId Int      @id @default(autoincrement()) @map("websocket_analytics_id")
+  sessionId            String   @map("session_id")
+  participantsCount    Int      @map("participants_count")
+  type                 String
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  @@map("websocket_analytics")
 }
