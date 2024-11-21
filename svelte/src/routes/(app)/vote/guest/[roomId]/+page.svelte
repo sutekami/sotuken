@@ -21,8 +21,8 @@
   let myChart: Chart;
   let canvasCtx: HTMLCanvasElement;
 
-  socket.on('guest:receive_value', (v, callback) => {
-    callback();
+  socket.on('guest:receive_value', (v, emittedAt, callback) => {
+    callback(v, emittedAt);
     guestName = v.guestUsers?.find(e => e.hash === $page.data.sessionId)?.guestName;
     inVoting = v.inVoting;
     inResult = v.inResult;

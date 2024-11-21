@@ -2,6 +2,8 @@ import { Socket, Server } from 'socket.io';
 import * as bundle from 'infra/router/bundle';
 import { redis, roomType, BASE_ROOM_ID_KEY, REDIS_EXPIRE_SECOND, ErrorType } from 'infra/redis';
 import { parse } from 'cookie';
+import * as fs from 'node:fs/promises';
+import * as fsSync from 'node:fs';
 
 async function getRoomValue({ roomId }: { roomId: string }): Promise<roomType> {
   return JSON.parse((await redis.get(BASE_ROOM_ID_KEY + roomId)) || '{}');
@@ -42,8 +44,15 @@ function setValue(
   };
 }
 
-const webSocketEmitterCallback = (analyticsSessionId?: string) => {
-  console.log(`callback is called on express server. at, ${new Date().toJSON()}`);
+const webSocketEmitterCallback = async (value?: roomType, emittedAt?: string) => {
+  if (!fsSync.existsSync('./event.log')) {
+    await fs.appendFile('./event.log', '"emitted_at","received_at","participants_count"\n');
+  }
+  if (!!value && !!emittedAt && typeof emittedAt === 'string') {
+    const receivedAt = new Date().toJSON();
+    const participantsCount = (value.hostUsers ?? []).length + Object.keys(value.guestUsers ?? {}).length;
+    fs.appendFile('./event.log', `"${new Date(emittedAt).toJSON()}","${receivedAt}","${participantsCount}"\n`);
+  }
 };
 
 async function emitAllUser({ socket, value, roomId }: { socket: Socket; value: roomType; roomId: string }) {
@@ -54,13 +63,11 @@ async function emitAllUser({ socket, value, roomId }: { socket: Socket; value: r
     socket.to(roomId).emit('host:receive_issue_section', issueSection);
     socket.to(roomId).emit('guest:receive_issue_section', issueSection);
   }
-  // ここでbeforecallの分析DBへのレコードを保存して、保存したレコードの中にあるsessionIdを取り出し、
-  // emitでsessionIdも一緒に送る
-  console.log(`before emit call. at ${new Date().toJSON()}`);
-  socket.emit('host:receive_value', value, webSocketEmitterCallback);
-  socket.emit('guest:receive_value', value, webSocketEmitterCallback);
-  socket.to(roomId).emit('host:receive_value', value, webSocketEmitterCallback);
-  socket.to(roomId).emit('guest:receive_value', value, webSocketEmitterCallback);
+  const emittedAt = new Date();
+  socket.emit('host:receive_value', value, emittedAt, webSocketEmitterCallback);
+  socket.emit('guest:receive_value', value, emittedAt, webSocketEmitterCallback);
+  socket.to(roomId).emit('host:receive_value', value, emittedAt, webSocketEmitterCallback);
+  socket.to(roomId).emit('guest:receive_value', value, emittedAt, webSocketEmitterCallback);
 }
 
 function emitError(socket: Socket, type?: string, msg?: string) {

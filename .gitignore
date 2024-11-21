@@ -1,6 +1,7 @@
 mysql/.data
 express/node_modules
 express/.env
+express/event.log
 radis
 *.rdb
 .env
