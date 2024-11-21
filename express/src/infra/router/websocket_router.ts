@@ -70,15 +70,6 @@ async function emitAllUser({ socket, value, roomId }: { socket: Socket; value: r
   socket.to(roomId).emit('guest:receive_value', value, emittedAt, webSocketEmitterCallback);
 }
 
-function emitError(socket: Socket, type?: string, msg?: string) {
-  switch (type) {
-    case ErrorType.RoomNotExists.value:
-      return socket.emit('error', 'ルームが存在しません');
-    default:
-      return socket.emit('error', msg ?? 'エラーが発生しました');
-  }
-}
-
 const parseCookie = (socket: Socket) => {
   return parse(socket.handshake.headers.cookie || '');
 };
