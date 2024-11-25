@@ -4,6 +4,7 @@
   import { Req } from '$lib/request';
   import { onMount } from 'svelte';
   import { storeConfig } from '$lib/store/config';
+  import { apiHandler } from '$lib/client';
 
   let params: URLSearchParams;
   let roomId: string | null;
@@ -18,11 +19,17 @@
 
   const handleClickEmitGuestConnect = async () => {
     guestName ||= randomGuestNames[Math.floor(Math.random() * randomGuestNames.length)];
-    const params = JSON.stringify({
-      guestName,
+    const res = await apiHandler({
+      uri: `/vote/guest/${roomId}`,
+      to: 'api',
+      method: 'POST',
+      body: { guestName },
     });
-    const req = Req.api.vote.guest.roomId.POST(roomId || '', params);
-    await fetch(req).then(() => (location.href = `/vote/guest/${roomId}`));
+    if (res.ok) {
+      location.href = `/vote/guest/${roomId}`;
+    } else {
+      throw `${res.statusText}`;
+    }
   };
 </script>
 

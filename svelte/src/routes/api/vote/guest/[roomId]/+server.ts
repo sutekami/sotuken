@@ -1,8 +1,11 @@
-import { COOKIE_SESSION_ID, Req } from '$lib/request/index.js';
+import { apiHandler } from '$lib/client/index.js';
 
-export async function POST({ fetch, params, cookies, request }) {
-  const sessionId = cookies.get(COOKIE_SESSION_ID);
-  const bodyParams = JSON.stringify(await request.json());
-  const req = Req.vote.guest.roomId.POST(params.roomId, bodyParams, sessionId);
-  return await fetch(req);
+export async function POST({ params, cookies, request }) {
+  return await apiHandler({
+    uri: `/vote/guest/${params.roomId}`,
+    method: 'POST',
+    to: 'server',
+    cookies,
+    body: await request.json(),
+  });
 }

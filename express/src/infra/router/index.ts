@@ -88,8 +88,11 @@ router
     }
 
     const room: roomType = JSON.parse(value);
-    if (!room.guestUsers?.find(e => e.hash === sessionId)) res.status(403).json();
-    else res.status(204).json();
+    if (!room.guestUsers?.find(e => e.hash === sessionId)) {
+      res.status(403).json();
+    } else {
+      res.status(204).json();
+    }
   })
   .post(async (req, res) => {
     const { guestName } = req.body;
